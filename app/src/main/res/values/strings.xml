@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">Laboratorio02</string>
     <string name="main_titulo">Menu de opciones</string>
+    <string name="pedido_titulo">Datos del pedido</string>
+    <string name="pedido_lbl_correo">Correo Electronico</string>
+    <string name="pedido_lbl_mod_entrega">Modo de entrega</string>
+    <string name="pedido_optLocal">Retira en local</string>
+    <string name="pedido_optDomicilio">Enviar a domicilio</string>
+    <string name="pedido_lbl_direccion">Direccion de envio</string>
+    <string name="pedido_lbl_hora_entrega">Hora Solicitada (hh:mm)</string>
+    <string name="pedido_btnAddProd">Agregar Producto</string>
+    <string name="pedido_btnQuitarProd">Quitar Producto</string>
+    <string name="pedido_btnHacer">Hacer Pedido</string>
+    <string name="pedido_btnVolver">Volver</string>
 
 </resources>

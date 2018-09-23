@@ -78,6 +78,8 @@ public class ListaProducto extends AppCompatActivity {
                 Intent intentResultado= new Intent();
                 intentResultado.putExtra("cantidad",Integer.parseInt(edtProdCantidad.getText().toString()));
                 intentResultado.putExtra("idProducto", productoSelc.getId());
+                setResult(RESULT_OK,intentResultado);
+                finish();
             }
         });
     }
