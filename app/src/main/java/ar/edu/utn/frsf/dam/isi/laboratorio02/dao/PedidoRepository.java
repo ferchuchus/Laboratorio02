@@ -9,6 +9,7 @@ public class PedidoRepository {
 
     private static List<Pedido> LISTA_PEDIDOS = new ArrayList<>();
     private static int GENERADOR_ID_PEDIDO = 0;
+    private List<Pedido> aux = new ArrayList<>();
 
     public List<Pedido> getLista(){
         return LISTA_PEDIDOS;
@@ -23,12 +24,22 @@ public class PedidoRepository {
         LISTA_PEDIDOS.add(p);
     }
 
-    public Pedido buscarPorId(Integer id){
-        for(Pedido p: LISTA_PEDIDOS){
-            if(p.getId().equals(id)) return p;
+    public Pedido buscarPorId(Integer id) {
+        for (Pedido p : LISTA_PEDIDOS) {
+            if (p.getId().equals(id)) return p;
         }
         return null;
     }
 
+     public List<Pedido> buscarPorMail(String mail) {
+         if (!mail.isEmpty()) {
+             for (Pedido p : LISTA_PEDIDOS) {
+                 if (p.getMailContacto().equals(mail))
+                     aux.add(p);
+             }
+         }
+         return aux;
 
+      }
 }
+
