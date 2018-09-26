@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ListaProducto">
+    tools:context=".activity.ListaProducto">
 
     <TextView
         android:layout_width="match_parent"

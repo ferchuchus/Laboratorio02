@@ -30,16 +30,5 @@ public class PedidoRepository {
         }
         return null;
     }
-
-     public List<Pedido> buscarPorMail(String mail) {
-         if (!mail.isEmpty()) {
-             for (Pedido p : LISTA_PEDIDOS) {
-                 if (p.getMailContacto().equals(mail))
-                     aux.add(p);
-             }
-         }
-         return aux;
-
-      }
 }
 
