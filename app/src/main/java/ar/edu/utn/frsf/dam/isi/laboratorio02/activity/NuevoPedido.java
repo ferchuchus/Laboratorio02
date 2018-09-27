@@ -63,10 +63,7 @@ public class NuevoPedido extends AppCompatActivity {
         btnVolver = (Button) findViewById(R.id.btnVolver);
         edtPedidoDireccion.setEnabled(false);
         optPedidoRetira.setChecked(true);
-        String[] horaIngresada = edtHora.getText().toString().split(":");
-        final GregorianCalendar hora = new GregorianCalendar();
-        final int valorHora = Integer.valueOf(horaIngresada[0]);
-        final int valorMinutos = Integer.valueOf(horaIngresada[1]);
+
 
         Intent i = getIntent();
         if (i.getExtras() != null) {
@@ -123,12 +120,41 @@ public class NuevoPedido extends AppCompatActivity {
         btnHacerPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validacion() == true) {
+
+                    String[] horaIngresada = edtHora.getText().toString().split(":");
+                    final GregorianCalendar hora = new GregorianCalendar();
+                    final int valorHora = Integer.valueOf(horaIngresada[0]);
+                    final int valorMinutos = Integer.valueOf(horaIngresada[1]);
+                    if (edtPedidoCorreo.getText().toString().isEmpty()) {
+                        Toast.makeText(NuevoPedido.this,
+                                "Debe ingresar el correo", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (optPedidoEnvio.isChecked() && edtPedidoDireccion.getText().toString().isEmpty()) {
+                        Toast.makeText(NuevoPedido.this,
+                                "Debe ingresar la direccion", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (lstPedidoItem.getAdapter().getCount() == 0) {
+                        Toast.makeText(NuevoPedido.this,
+                                "Debe agregar al menos un producto", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (valorHora < 0 || valorHora > 23) {
+                        Toast.makeText(NuevoPedido.this,
+                                "La hora ingresada " + valorHora + " es incorrecta", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (valorMinutos < 0 || valorMinutos > 59) {
+                        Toast.makeText(NuevoPedido.this,
+                                "Los minutos " + valorMinutos + " son incorrectos", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     hora.set(Calendar.HOUR_OF_DAY, valorHora);
                     hora.set(Calendar.MINUTE, valorMinutos);
                     hora.set(Calendar.SECOND, Integer.valueOf(0));
                     unPedido.setFecha(hora.getTime());
-                    unPedido.setMailContacto(edtPedidoCorreo.toString());
+                    unPedido.setMailContacto(edtPedidoCorreo.getText().toString());
                     unPedido.setRetirar(optPedidoRetira.isChecked());
                     unPedido.setDireccionEnvio(edtPedidoDireccion.toString());
                     unPedido.setEstado(Pedido.Estado.REALIZADO);
@@ -137,33 +163,6 @@ public class NuevoPedido extends AppCompatActivity {
                     Intent i = new Intent(getApplicationContext(), HistorialPedido.class);
                     startActivity(i);
                 }
-
-            }
-
-            public Boolean validacion() {
-                if (edtPedidoCorreo.getText().toString().isEmpty()) {
-                    Toast.makeText(NuevoPedido.this,
-                            "Debe ingresar el correo", Toast.LENGTH_LONG).show();
-                    return false;
-                } else if (optPedidoEnvio.isChecked() && edtPedidoDireccion.getText().toString().isEmpty()) {
-                    Toast.makeText(NuevoPedido.this,
-                            "Debe ingresar la direccion", Toast.LENGTH_LONG).show();
-                    return false;
-                } else if (lstPedidoItem.getAdapter().getCount() == 0) {
-                    Toast.makeText(NuevoPedido.this,
-                            "Debe agregar al menos un producto", Toast.LENGTH_LONG).show();
-                    return false;
-                } else if (valorHora < 0 || valorHora > 23) {
-                    Toast.makeText(NuevoPedido.this,
-                            "La hora ingresada " + valorHora + " es incorrecta", Toast.LENGTH_LONG).show();
-                    return false;
-                } else if (valorMinutos < 0 || valorMinutos > 59) {
-                    Toast.makeText(NuevoPedido.this,
-                            "Los minutos " + valorMinutos + " son incorrectos", Toast.LENGTH_LONG).show();
-                    return false;
-                } else
-                    return true;
-            }
 
         });
 

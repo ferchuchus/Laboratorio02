@@ -52,16 +52,15 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         Pedido pedido = super.getItem(position);
 
         if (pedido.getRetirar() == true) {
-            //holder.ivImagen.setImageResource(R.drawable.cutlery);
+            holder.ivImagen.setImageResource(R.drawable.cutlery);
         } else {
-            //holder.ivImagen.setImageResource(R.drawable.truck);
+            holder.ivImagen.setImageResource(R.drawable.truck);
 
         }
 
         holder.tvMailPedido.setText("Contacto: " + pedido.getMailContacto());
-        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        //holder.tvHoraEntrega.setText("Fecha: "+sdf.format(pedido.getFecha()).toString());
-        holder.tvHoraEntrega.setText("Fecha: " + pedido.getFecha());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        holder.tvHoraEntrega.setText("Fecha: " + sdf.format(pedido.getFecha()));
         colorEstado(pedido, holder);
         deshabilitaBoton(pedido, holder, datos);
         for (PedidoDetalle p : pedido.getDetalle()) {
