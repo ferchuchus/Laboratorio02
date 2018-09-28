@@ -69,16 +69,16 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         holder.tvCantidadItems.setText("Items: " + cantidad);
         holder.tvPrecio.setText("A Pagar: " + pedido.total());
 
-        final View.OnClickListener onClickListener = new View.OnClickListener() {
+        holder.btnCancelar.setTag(position);
+        holder.btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int indice = (int) v.getTag();
                 Pedido pedidoSel = datos.get(indice);
                 pedidoSel.setEstado(CANCELADO);
                 PedidoAdapter.this.notifyDataSetChanged();
-                return;
             }
-        };
+        });
 
         return fila;
     }

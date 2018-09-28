@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
@@ -121,51 +122,79 @@ public class NuevoPedido extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                    String[] horaIngresada = edtHora.getText().toString().split(":");
-                    final GregorianCalendar hora = new GregorianCalendar();
-                    final int valorHora = Integer.valueOf(horaIngresada[0]);
-                    final int valorMinutos = Integer.valueOf(horaIngresada[1]);
-                    if (edtPedidoCorreo.getText().toString().isEmpty()) {
-                        Toast.makeText(NuevoPedido.this,
-                                "Debe ingresar el correo", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (optPedidoEnvio.isChecked() && edtPedidoDireccion.getText().toString().isEmpty()) {
-                        Toast.makeText(NuevoPedido.this,
-                                "Debe ingresar la direccion", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (lstPedidoItem.getAdapter().getCount() == 0) {
-                        Toast.makeText(NuevoPedido.this,
-                                "Debe agregar al menos un producto", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (valorHora < 0 || valorHora > 23) {
-                        Toast.makeText(NuevoPedido.this,
-                                "La hora ingresada " + valorHora + " es incorrecta", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (valorMinutos < 0 || valorMinutos > 59) {
-                        Toast.makeText(NuevoPedido.this,
-                                "Los minutos " + valorMinutos + " son incorrectos", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    hora.set(Calendar.HOUR_OF_DAY, valorHora);
-                    hora.set(Calendar.MINUTE, valorMinutos);
-                    hora.set(Calendar.SECOND, Integer.valueOf(0));
-                    unPedido.setFecha(hora.getTime());
-                    unPedido.setMailContacto(edtPedidoCorreo.getText().toString());
-                    unPedido.setRetirar(optPedidoRetira.isChecked());
-                    unPedido.setDireccionEnvio(edtPedidoDireccion.toString());
-                    unPedido.setEstado(Pedido.Estado.REALIZADO);
-                    repositorioPedido.guardarPedido(unPedido);
-
-                    Intent i = new Intent(getApplicationContext(), HistorialPedido.class);
-                    startActivity(i);
+                String[] horaIngresada = edtHora.getText().toString().split(":");
+                final GregorianCalendar hora = new GregorianCalendar();
+                final int valorHora = Integer.valueOf(horaIngresada[0]);
+                final int valorMinutos = Integer.valueOf(horaIngresada[1]);
+                if (edtPedidoCorreo.getText().toString().isEmpty()) {
+                    Toast.makeText(NuevoPedido.this,
+                            "Debe ingresar el correo", Toast.LENGTH_LONG).show();
+                    return;
                 }
+                if (optPedidoEnvio.isChecked() && edtPedidoDireccion.getText().toString().isEmpty()) {
+                    Toast.makeText(NuevoPedido.this,
+                            "Debe ingresar la direccion", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (lstPedidoItem.getAdapter().getCount() == 0) {
+                    Toast.makeText(NuevoPedido.this,
+                            "Debe agregar al menos un producto", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (valorHora < 0 || valorHora > 23) {
+                    Toast.makeText(NuevoPedido.this,
+                            "La hora ingresada " + valorHora + " es incorrecta", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (valorMinutos < 0 || valorMinutos > 59) {
+                    Toast.makeText(NuevoPedido.this,
+                            "Los minutos " + valorMinutos + " son incorrectos", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                hora.set(Calendar.HOUR_OF_DAY, valorHora);
+                hora.set(Calendar.MINUTE, valorMinutos);
+                hora.set(Calendar.SECOND, Integer.valueOf(0));
+                unPedido.setFecha(hora.getTime());
+                unPedido.setMailContacto(edtPedidoCorreo.getText().toString());
+                unPedido.setRetirar(optPedidoRetira.isChecked());
+                unPedido.setDireccionEnvio(edtPedidoDireccion.toString());
+                unPedido.setEstado(Pedido.Estado.REALIZADO);
+                repositorioPedido.guardarPedido(unPedido);
+
+                cambiarEstadoPedido();
+                Intent i = new Intent(getApplicationContext(), HistorialPedido.class);
+                startActivity(i);
+            }
 
         });
 
+    }
+
+    void cambiarEstadoPedido() {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<Pedido> lista = repositorioPedido.getLista();
+                for (Pedido p : lista) {
+                    if (p.getEstado().equals(Pedido.Estado.REALIZADO))
+                        p.setEstado(Pedido.Estado.ACEPTADO);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(NuevoPedido.this, "Información del pedio actualizado", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        Thread unHilo = new Thread(r);
+        unHilo.start();
     }
 
     @Override
