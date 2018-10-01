@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,7 +45,7 @@ public class NuevoPedido extends AppCompatActivity {
     private PedidoRepository repositorioPedido;
     private ProductoRepository repositorioProducto;
     private ArrayAdapter<PedidoDetalle> adaptadorLstProductoItem;
-    private Integer idPedidoMostrar = 0;
+    private int idPedidoMostrar = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,10 @@ public class NuevoPedido extends AppCompatActivity {
 
 
         Intent i = getIntent();
-        if (i.getExtras() != null) {
-            idPedidoMostrar = i.getExtras().getInt("idPedido");
-        }
-        if (idPedidoMostrar > 0) {
+        if (((int)i.getExtras().get("VER_DETALLE")) == 1) {
+            idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
+            int idPureba= idPedidoMostrar;
+            repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
             adaptadorLstProductoItem = new ArrayAdapter<PedidoDetalle>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);

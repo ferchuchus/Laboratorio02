@@ -1,6 +1,7 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -16,6 +17,8 @@ import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.ListaProducto;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
@@ -80,6 +83,18 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             }
         });
 
+        holder.btnVerDetalle.setTag(position);
+        holder.btnVerDetalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int indice= (int) v.getTag();
+                Pedido pedidoSel=datos.get(indice);
+                Intent i= new Intent(getContext(), NuevoPedido.class);
+                i.putExtra("VER_DETALLE", 1);
+                i.putExtra("ID_PEDIDO", pedidoSel.getId());
+                ctx.startActivity(i);
+            }
+        });
         return fila;
     }
 

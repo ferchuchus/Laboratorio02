@@ -36,6 +36,7 @@ public class HistorialPedido extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
+                i.putExtra("VER_DETALLE", 0);
                 startActivity(i);
             }
         });
@@ -53,16 +54,6 @@ public class HistorialPedido extends AppCompatActivity {
             listaPedidos=(ListView)findViewById(R.id.lstHistorialPedidos);
             listaPedidos.setAdapter(new PedidoAdapter(this, repositorioPedido.getLista()));
 
-            listaPedidos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Log.v("LONG","ENTRAA??");
-                    Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
-                    i.putExtra("idPedido", repositorioPedido.getLista().get(position).getId());
-                    startActivity(i);
-                    return true;
-                }
-            });
         }
 
     }

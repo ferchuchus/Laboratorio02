@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
+                i.putExtra("VER_DETALLE",0);
                 startActivity(i);
             }
         });
