@@ -6,24 +6,19 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.ListaProducto;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
-
-import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.*;
 import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.Estado.*;
 
 public class PedidoAdapter extends ArrayAdapter<Pedido> {
@@ -55,9 +50,9 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         Pedido pedido = super.getItem(position);
 
         if (pedido.getRetirar() == true) {
-            holder.ivImagen.setImageResource(R.drawable.cutlery);
+//            holder.ivImagen.setImageResource(R.drawable.cutlery);
         } else {
-            holder.ivImagen.setImageResource(R.drawable.truck);
+//            holder.ivImagen.setImageResource(R.drawable.truck);
 
         }
 

@@ -2,6 +2,7 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.EstadoPedidoReceiver;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
@@ -180,17 +182,15 @@ public class NuevoPedido extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Intent intent = new Intent();
                 List<Pedido> lista = repositorioPedido.getLista();
                 for (Pedido p : lista) {
-                    if (p.getEstado().equals(Pedido.Estado.REALIZADO))
-                        p.setEstado(Pedido.Estado.ACEPTADO);
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(NuevoPedido.this, "Información del pedio actualizado", Toast.LENGTH_LONG).show();
+                    if (p.getEstado().equals(Pedido.Estado.REALIZADO)) {
+                        intent.putExtra("idPedido",p.getId());
+                        intent.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO");
+                        sendBroadcast(intent);
                     }
-                });
+                }
             }
         };
 
