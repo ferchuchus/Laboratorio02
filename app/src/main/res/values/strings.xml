@@ -12,5 +12,7 @@
     <string name="pedido_btnQuitarProd">Quitar Producto</string>
     <string name="pedido_btnHacer">Hacer Pedido</string>
     <string name="pedido_btnVolver">Volver</string>
+    <string name="channel_description">Canal API26</string>
+    <string name="channel_name">Canal01</string>
 
 </resources>
