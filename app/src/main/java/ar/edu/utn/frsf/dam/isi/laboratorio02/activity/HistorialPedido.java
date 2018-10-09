@@ -3,6 +3,7 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,6 +36,7 @@ public class HistorialPedido extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
+                i.putExtra("VER_DETALLE", 0);
                 startActivity(i);
             }
         });
@@ -52,18 +54,6 @@ public class HistorialPedido extends AppCompatActivity {
             listaPedidos=(ListView)findViewById(R.id.lstHistorialPedidos);
             listaPedidos.setAdapter(new PedidoAdapter(this, repositorioPedido.getLista()));
 
-            listaPedidos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
-                    i.putExtra("idPedido", repositorioPedido.getLista().get(position).getId());
-                    startActivity(i);
-                    return true;
-                }
-            });
         }
-
     }
-
-
 }

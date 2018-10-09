@@ -1,26 +1,24 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
-
-import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.*;
 import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.Estado.*;
 
 public class PedidoAdapter extends ArrayAdapter<Pedido> {
@@ -52,9 +50,9 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         Pedido pedido = super.getItem(position);
 
         if (pedido.getRetirar() == true) {
-            holder.ivImagen.setImageResource(R.drawable.cutlery);
+//            holder.ivImagen.setImageResource(R.drawable.cutlery);
         } else {
-            holder.ivImagen.setImageResource(R.drawable.truck);
+//            holder.ivImagen.setImageResource(R.drawable.truck);
 
         }
 
@@ -69,17 +67,29 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         holder.tvCantidadItems.setText("Items: " + cantidad);
         holder.tvPrecio.setText("A Pagar: " + pedido.total());
 
-        final View.OnClickListener onClickListener = new View.OnClickListener() {
+        holder.btnCancelar.setTag(position);
+        holder.btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int indice = (int) v.getTag();
                 Pedido pedidoSel = datos.get(indice);
                 pedidoSel.setEstado(CANCELADO);
                 PedidoAdapter.this.notifyDataSetChanged();
-                return;
             }
-        };
+        });
 
+        holder.btnVerDetalle.setTag(position);
+        holder.btnVerDetalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int indice= (int) v.getTag();
+                Pedido pedidoSel=datos.get(indice);
+                Intent i= new Intent(getContext(), NuevoPedido.class);
+                i.putExtra("VER_DETALLE", 1);
+                i.putExtra("ID_PEDIDO", pedidoSel.getId());
+                ctx.startActivity(i);
+            }
+        });
         return fila;
     }
 
