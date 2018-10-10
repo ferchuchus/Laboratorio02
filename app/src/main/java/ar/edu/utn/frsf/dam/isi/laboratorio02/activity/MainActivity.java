@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.PrepararPedidoService;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnNuevoPedido;
     private Button btnHistorial;
     private Button btnListaProductos;
+    private Button btnPrepararPedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), ListaProducto.class);
                 i.putExtra("NUEVO_PEDIDO",0);
                 startActivity(i);
+            }
+        });
+
+        btnPrepararPedidos= (Button) findViewById(R.id.btnPrepararPedidos);
+        btnPrepararPedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(getApplicationContext(), PrepararPedidoService.class);
+                startService(i);
             }
         });
     }
