@@ -107,7 +107,6 @@ public class NuevoPedido extends AppCompatActivity {
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
         }
 
-
         optPedidoRetira.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +178,14 @@ public class NuevoPedido extends AppCompatActivity {
                 startActivity(i);
             }
 
+        });
+
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+            }
         });
 
     }
