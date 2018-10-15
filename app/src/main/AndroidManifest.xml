@@ -32,16 +32,20 @@
             </intent-filter>
         </receiver>
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
         <service
             android:name=".PrepararPedidoService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"></service>
         <service
             android:name=".RestoFirebaseInstanceIdService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
@@ -49,7 +53,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESAGGING_EVENT"/>
+                <action android:name="com.google.firebase.MESAGGING_EVENT" />
             </intent-filter>
         </service>
 

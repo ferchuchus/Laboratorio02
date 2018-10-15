@@ -1,6 +1,5 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,6 +46,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
                 break;
 
             case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION":
+                p.setEstado(Pedido.Estado.EN_PREPARACION);
                 destino= new Intent(context, HistorialPedido.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent=PendingIntent.getActivity(context,0, destino, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -62,14 +62,22 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
                 break;
 
             case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_LISTO":
-                notification= new NotificationCompat.Builder(context, "CANAL01")
+                p.setEstado(Pedido.Estado.LISTO);
+                destino = new Intent(context, NuevoPedido.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                destino.putExtra("VER_DETALLE", 1);
+                destino.putExtra("ID_PEDIDO", p.getId());
+                pendingIntent = PendingIntent.getActivity(context, 0, destino, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                notification = new NotificationCompat.Builder(context, "CANAL01")
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
-                        .setContentTitle("Tu pedido esta "+Pedido.Estado.ACEPTADO)
+                        .setContentTitle("Tu pedido fue " + Pedido.Estado.LISTO)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText("El costo será de " + p.total() + " " +
                                         "Previsto el envío para " + sdf.format(p.getFecha())))
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true);
+                break;
 
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

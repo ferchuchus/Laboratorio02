@@ -26,7 +26,6 @@ public class PrepararPedidoService extends IntentService {
         List<Pedido> listaPedidos= repositorioPedidos.getLista();
         for(Pedido p : listaPedidos){
             if(p.getEstado().equals(Pedido.Estado.ACEPTADO)){
-                p.setEstado(Pedido.Estado.EN_PREPARACION);
                 Intent i= new Intent();
                 i.putExtra("idPedido", p.getId());
                 i.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION");

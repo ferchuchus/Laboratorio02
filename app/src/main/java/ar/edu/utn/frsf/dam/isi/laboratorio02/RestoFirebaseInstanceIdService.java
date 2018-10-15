@@ -28,6 +28,6 @@ public class RestoFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
     private String leerToken(){
         SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(this);
-        return preferences.getString("regustration_id", null);
+        return preferences.getString("registration_id", null);
     }
 }
