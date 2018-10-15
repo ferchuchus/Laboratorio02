@@ -2,6 +2,7 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.EstadoPedidoReceiver;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
@@ -70,23 +72,33 @@ public class NuevoPedido extends AppCompatActivity {
         Intent i = getIntent();
         if (((int)i.getExtras().get("VER_DETALLE")) == 1) {
             idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
-            int idPureba= idPedidoMostrar;
             repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
             adaptadorLstProductoItem = new ArrayAdapter<PedidoDetalle>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
             edtPedidoCorreo.setText(unPedido.getMailContacto());
+            edtPedidoCorreo.setEnabled(false);
             if (unPedido.getRetirar() == true) {
                 optPedidoRetira.setActivated(true);
+                optPedidoRetira.setEnabled(false);
                 optPedidoEnvio.setActivated(false);
+                optPedidoEnvio.setEnabled(false);
                 edtPedidoDireccion.setEnabled(false);
             } else {
                 optPedidoRetira.setActivated(false);
+                optPedidoRetira.setEnabled(false);
                 optPedidoEnvio.setActivated(true);
+                optPedidoEnvio.setEnabled(false);
                 edtPedidoDireccion.setText(unPedido.getDireccionEnvio());
+                edtPedidoDireccion.setEnabled(false);
             }
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             edtHora.setText(sdf.format(unPedido.getFecha()));
+            edtHora.setEnabled(false);
+            btnAgregarProducto.setVisibility(View.INVISIBLE);
+            btnHacerPedido.setVisibility(View.INVISIBLE);
+            btnQuitarProducto.setVisibility(View.INVISIBLE);
+            lblPedido.setText("Total del Pedido: $" + unPedido.total());
         } else {
             unPedido = new Pedido();
             repositorioPedido = new PedidoRepository();
@@ -158,7 +170,7 @@ public class NuevoPedido extends AppCompatActivity {
                 unPedido.setFecha(hora.getTime());
                 unPedido.setMailContacto(edtPedidoCorreo.getText().toString());
                 unPedido.setRetirar(optPedidoRetira.isChecked());
-                unPedido.setDireccionEnvio(edtPedidoDireccion.toString());
+                unPedido.setDireccionEnvio(edtPedidoDireccion.getText().toString());
                 unPedido.setEstado(Pedido.Estado.REALIZADO);
                 repositorioPedido.guardarPedido(unPedido);
 
@@ -180,17 +192,15 @@ public class NuevoPedido extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Intent intent = new Intent();
                 List<Pedido> lista = repositorioPedido.getLista();
                 for (Pedido p : lista) {
-                    if (p.getEstado().equals(Pedido.Estado.REALIZADO))
-                        p.setEstado(Pedido.Estado.ACEPTADO);
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(NuevoPedido.this, "Información del pedio actualizado", Toast.LENGTH_LONG).show();
+                    if (p.getEstado().equals(Pedido.Estado.REALIZADO)) {
+                        intent.putExtra("idPedido",p.getId());
+                        intent.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO");
+                        sendBroadcast(intent);
                     }
-                });
+                }
             }
         };
 

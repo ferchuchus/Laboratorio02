@@ -55,8 +55,5 @@ public class HistorialPedido extends AppCompatActivity {
             listaPedidos.setAdapter(new PedidoAdapter(this, repositorioPedido.getLista()));
 
         }
-
     }
-
-
 }
