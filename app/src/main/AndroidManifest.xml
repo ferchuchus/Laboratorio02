@@ -35,7 +35,9 @@
         <service
             android:name=".PrepararPedidoService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".activity.ConfiguracionActivity"></activity>
     </application>
 
 </manifest>
