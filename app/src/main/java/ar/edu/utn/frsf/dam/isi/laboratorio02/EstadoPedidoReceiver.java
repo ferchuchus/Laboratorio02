@@ -71,7 +71,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 
                 notification = new NotificationCompat.Builder(context, "CANAL01")
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
-                        .setContentTitle("Tu pedido fue " + Pedido.Estado.LISTO)
+                        .setContentTitle("Tu pedido esta " + Pedido.Estado.LISTO)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText("El costo será de " + p.total() + " " +
                                         "Previsto el envío para " + sdf.format(p.getFecha())))
