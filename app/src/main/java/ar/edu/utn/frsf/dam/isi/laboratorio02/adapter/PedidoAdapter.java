@@ -117,7 +117,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
                 break;
             case EN_PREPARACION:
                 holder.estado.setTextColor(Color.MAGENTA);
-                holder.estado.setText("Estado: EN_REPARACION");
+                holder.estado.setText("Estado: EN_PREPARACION");
                 break;
             case REALIZADO:
                 holder.estado.setTextColor(Color.BLUE);

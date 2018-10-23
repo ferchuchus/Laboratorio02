@@ -1,6 +1,8 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -105,8 +107,14 @@ public class NuevoPedido extends AppCompatActivity {
             repositorioProducto = new ProductoRepository();
             adaptadorLstProductoItem = new ArrayAdapter<PedidoDetalle>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
+            SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(NuevoPedido.this);
+            edtPedidoCorreo.setText(preferences.getString("edtCorreoPreference",""));
+            if(!preferences.getBoolean("optRetirarPreference",true)){
+                optPedidoRetira.setChecked(false);
+                optPedidoEnvio.setChecked(true);
+                edtPedidoDireccion.setEnabled(true);
+            }
         }
-
 
         optPedidoRetira.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +187,15 @@ public class NuevoPedido extends AppCompatActivity {
                 startActivity(i);
             }
 
+        });
+
+
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+            }
         });
 
     }
