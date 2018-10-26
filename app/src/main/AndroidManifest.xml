@@ -57,6 +57,7 @@
             </intent-filter>
         </service>
         <activity android:name=".activity.ConfiguracionActivity"></activity>
+        <activity android:name=".activity.CategoriaActivity"></activity>
 
     </application>
 
