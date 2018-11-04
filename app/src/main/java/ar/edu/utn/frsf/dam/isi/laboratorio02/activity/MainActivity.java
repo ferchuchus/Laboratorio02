@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.PrepararPedidoService;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.service.PrepararPedidoService;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 
 
