@@ -1,9 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.GestionProductoActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <ToggleButton
+        android:id="@+id/abmProductoAltaNuevo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textOff="@string/crear_producto_nuevo"
+        android:textOn="@string/buscar_por_id_y_actualizar" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buscar_producto_por_id" />
+
+    <EditText
+        android:id="@+id/abmProductoIdBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="" />
+
+    <Button
+        android:id="@+id/btnAbmProductoBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buscar_por_id" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/datos_del_producto" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/nombre" />
+
+    <EditText
+        android:id="@+id/abmProductoNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/descripcion" />
+
+    <EditText
+        android:id="@+id/abmProductoDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/precio" />
+
+    <EditText
+        android:id="@+id/abmProductoPrecio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/categoria" />
+
+    <Spinner
+        android:id="@+id/abmProductoCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnAbmProductoCrear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/guardar" />
+
+    <Button
+        android:id="@+id/btnAbmProductoBorrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/borrar" />
+
+    <Button
+        android:id="@+id/btnAbmProductoVolver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/volver" />
+</LinearLayout>
