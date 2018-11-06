@@ -2,6 +2,7 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -10,7 +11,13 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.RestClient;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRetrofit;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GestionProductoActivity extends AppCompatActivity {
     private Button btnMenu;
@@ -25,6 +32,7 @@ public class GestionProductoActivity extends AppCompatActivity {
     private Button btnBorrar;
     private Boolean flagActualizacion;
     private ArrayAdapter<Categoria> comboAdapter;
+    private Producto p=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +49,12 @@ public class GestionProductoActivity extends AppCompatActivity {
         btnGuardar = (Button) findViewById(R.id.btnAbmProductoCrear);
         btnBuscar = (Button) findViewById(R.id.btnAbmProductoBuscar);
         btnBorrar = (Button) findViewById(R.id.btnAbmProductoBorrar);
+
         opcionNuevoBusqueda.setChecked(false);
         btnBuscar.setEnabled(false);
         btnBorrar.setEnabled(false);
         idProductoBuscar.setEnabled(false);
+
         opcionNuevoBusqueda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -52,6 +62,24 @@ public class GestionProductoActivity extends AppCompatActivity {
                 btnBuscar.setEnabled(isChecked);
                 btnBorrar.setEnabled(isChecked);
                 idProductoBuscar.setEnabled(isChecked);
+            }
+        });
+
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProductoRetrofit clienteRest = RestClient.getInstance().getRetrofit().create(ProductoRetrofit.class);
+                Call<Producto> altaCall = clienteRest.crearProducto(p);
+                altaCall.enqueue(new Callback<Producto>() {
+                    @Override
+                    public void onResponse(Call<Producto> call, Response<Producto> resp) {
+                        // procesar la respuesta
+                    }
+
+                    @Override
+                    public void onFailure(Call<Producto> call, Throwable t) {
+                    }
+                });
             }
         });
     }

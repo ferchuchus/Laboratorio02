@@ -1,3 +1,5 @@
+package ar.edu.utn.frsf.dam.isi.laboratorio02.rest;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

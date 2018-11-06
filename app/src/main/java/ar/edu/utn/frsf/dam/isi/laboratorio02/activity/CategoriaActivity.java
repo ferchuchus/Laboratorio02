@@ -15,7 +15,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.CategoriaRest;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 
