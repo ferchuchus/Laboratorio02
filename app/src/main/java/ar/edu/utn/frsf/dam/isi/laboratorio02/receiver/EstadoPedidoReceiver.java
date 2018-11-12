@@ -1,4 +1,4 @@
-package ar.edu.utn.frsf.dam.isi.laboratorio02;
+package ar.edu.utn.frsf.dam.isi.laboratorio02.receiver;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
