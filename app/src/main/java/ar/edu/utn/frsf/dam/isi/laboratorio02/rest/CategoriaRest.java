@@ -1,4 +1,4 @@
-package ar.edu.utn.frsf.dam.isi.laboratorio02;
+package ar.edu.utn.frsf.dam.isi.laboratorio02.rest;
 
 
 import org.json.JSONArray;
@@ -30,7 +30,8 @@ public class CategoriaRest {
         categoriaJson.put("nombre", c.getNombre());
 
         //Abrir una conexion al servidor para enviar el post
-        URL url = new URL("http://192.168.0.17:5000/categorias");
+        //URL url = new URL("http://192.168.0.17:5000/categorias");
+        URL url = new URL("http://192.168.1.7:5000/categorias");
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setChunkedStreamingMode(0);
         urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -73,7 +74,8 @@ public class CategoriaRest {
         HttpURLConnection urlConnection=null;
         InputStream in=null;
 
-        URL url= new URL("http://192.168.0.17:5000/categorias");
+      //  URL url= new URL("http://192.168.0.17:5000/categorias");
+        URL url = new URL("http://192.168.1.7:5000/categorias");
         urlConnection= (HttpURLConnection) url.openConnection();
         urlConnection.setRequestProperty("Accept-Type", "application/json");
         urlConnection.setRequestMethod("GET");
