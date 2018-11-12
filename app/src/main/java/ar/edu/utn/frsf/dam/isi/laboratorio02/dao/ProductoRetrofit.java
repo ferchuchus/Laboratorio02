@@ -12,18 +12,18 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ProductoRetrofit {
-    @GET("producto/")
+    @GET("productos/")
     public Call<List<Producto>> listarProductos();
 
-    @GET("producto/{id}")
+    @GET("productos/{id}")
     public Call<Producto> buscarProductoPorId(@Path("id") int idProducto);
 
-    @POST("producto/")
+    @POST("productos/")
     Call<Producto> crearProducto(@Body Producto p);
 
-    @PUT("producto/{id}")
+    @PUT("productos/{id}")
     Call<Producto> actualizarProducto(@Path("id") int idProducto, @Body Producto p);
 
-    @DELETE("producto/{id}")
+    @DELETE("productos/{id}")
     Call<Producto> borrar(@Path("id") int idProducto);
 }

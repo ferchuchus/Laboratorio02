@@ -17,7 +17,7 @@ public class RestClient {
 
     private RestClient() {
         Gson gson = new GsonBuilder().setLenient().create();
-        retrofit = new Retrofit.Builder().baseUrl("http://10.0.2.2:5000/").addConverterFactory(GsonConverterFactory.create(gson)).build();
+        retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.7:5000/").addConverterFactory(GsonConverterFactory.create(gson)).build();
     }
 
     public Retrofit getRetrofit() {

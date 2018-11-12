@@ -95,7 +95,8 @@ public class ListaProducto extends AppCompatActivity {
             @Override
             public void run() {
                 CategoriaRest catRest= new CategoriaRest();
-                try {datosCategoria= catRest.listarTodas();}
+                try {
+                    datosCategoria= catRest.listarTodas();}
                 catch (IOException ie){ie.printStackTrace();}
                 catch (JSONException je){je.printStackTrace();}
 
