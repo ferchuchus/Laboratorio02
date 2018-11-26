@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaDao;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
@@ -37,7 +37,7 @@ public class CategoriaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_categoria);
         textoCat = (EditText) findViewById(R.id.txtNombreCategoria);
 
-        catDao = CategoriaRepository.getInstance(this).getCategoriaDao();
+        catDao = BaseDatosRepository.getInstance(this).getCategoriaDao();
 
         handler = new Handler(Looper.getMainLooper()) {
             @Override
