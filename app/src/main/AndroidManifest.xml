@@ -61,7 +61,7 @@
 
         <activity android:name=".activity.ConfiguracionActivity" />
         <activity android:name=".activity.CategoriaActivity" />
-        <activity android:name=".activity.GestionProductoActivity"></activity>
+        <activity android:name=".activity.GestionProductoActivity" />
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@ public class Categoria {
     @PrimaryKey(autoGenerate = true)
     private Integer id;
 
-    @ColumnInfo(name="nombre")
+    @ColumnInfo(name="Nombre")
     private String nombre;
 
     public Categoria(Integer id, String nombre) {

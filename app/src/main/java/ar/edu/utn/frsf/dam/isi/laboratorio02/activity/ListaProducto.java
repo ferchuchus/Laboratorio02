@@ -43,7 +43,9 @@ public class ListaProducto extends AppCompatActivity {
         setContentView(R.layout.activity_lista_producto);
         edtProdCantidad=(EditText) findViewById(R.id.edtProdCantidad);
         btnProdAddPedido= (Button) findViewById(R.id.btnProdAddPedido);
+
         cargarCombo();
+
         /*cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
         lstProductos= (ListView) findViewById(R.id.lstProductos);
         adaptadorSpinner = new ArrayAdapter<Categoria>(ListaProducto.this,android.R.layout.simple_list_item_1,datosCategoria);
