@@ -75,5 +75,7 @@ public class BaseDatosRepository {
         productoDao.delete(prod);
     }
 
+    public Producto buscarProductoID(Integer id){return productoDao.getProductoId(id);}
+
 
 }

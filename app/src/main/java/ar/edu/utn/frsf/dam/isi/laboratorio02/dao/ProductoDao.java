@@ -16,6 +16,9 @@ public interface ProductoDao {
     @Query("SELECT * FROM Producto")
     List<Producto> getAll();
 
+    @Query("SELECT * FROM Producto WHERE id=:id")
+    Producto getProductoId(Integer id);
+
     @Insert
     long insert(Producto cat);
 
