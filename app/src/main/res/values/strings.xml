@@ -15,4 +15,16 @@
     <string name="channel_description">Canal API26</string>
     <string name="channel_name">Canal01</string>
     <string name="default_notification_channel_id">Canal01</string>
+    <string name="guardar">Guardar</string>
+    <string name="borrar">Borrar</string>
+    <string name="datos_del_producto">Datos del producto</string>
+    <string name="precio">Precio</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="nombre">Nombre</string>
+    <string name="categoria">Categoria</string>
+    <string name="volver">VOLVER</string>
+    <string name="buscar_por_id">Buscar por ID...</string>
+    <string name="crear_producto_nuevo">Crear producto nuevo</string>
+    <string name="buscar_por_id_y_actualizar">Buscar por ID y actualizar</string>
+    <string name="buscar_producto_por_id">Buscar Producto por id</string>
 </resources>

@@ -1,23 +1,20 @@
-package ar.edu.utn.frsf.dam.isi.laboratorio02;
+package ar.edu.utn.frsf.dam.isi.laboratorio02.rest;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 public class CategoriaRest {
@@ -33,7 +30,8 @@ public class CategoriaRest {
         categoriaJson.put("nombre", c.getNombre());
 
         //Abrir una conexion al servidor para enviar el post
-        URL url = new URL("http://192.168.0.17:5000/categorias");
+        //URL url = new URL("http://192.168.0.17:5000/categorias");
+        URL url = new URL("http://192.168.1.7:5000/categorias");
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setChunkedStreamingMode(0);
         urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -69,5 +67,43 @@ public class CategoriaRest {
             try { printOut.close(); } catch (IOException e) { e.printStackTrace(); }}
             if (in != null) { try {in.close();} catch (IOException e){e.printStackTrace();}}
             if (urlConnection != null) urlConnection.disconnect();
+    }
+
+    public List<Categoria> listarTodas() throws IOException, JSONException {
+        List<Categoria> resultado= new ArrayList<>();
+        HttpURLConnection urlConnection=null;
+        InputStream in=null;
+
+      //  URL url= new URL("http://192.168.0.17:5000/categorias");
+        URL url = new URL("http://192.168.1.7:5000/categorias");
+        urlConnection= (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("Accept-Type", "application/json");
+        urlConnection.setRequestMethod("GET");
+
+        in=new BufferedInputStream(urlConnection.getInputStream());
+        InputStreamReader isw= new InputStreamReader(in);
+        StringBuilder sb= new StringBuilder();
+        int data= isw.read();
+
+        if(urlConnection.getResponseCode()==200 || urlConnection.getResponseCode()==201){
+            while(data!=-1){
+                char current= (char) data;
+                sb.append(current);
+                data= isw.read();
+            }
+            JSONTokener tokener= new JSONTokener(sb.toString());
+            JSONArray listaCategorias= (JSONArray) tokener.nextValue();
+            for(int k = 0; k< listaCategorias.length(); k++){
+                Categoria cat= new Categoria();
+                JSONObject jsonObject= listaCategorias.getJSONObject(k);
+                cat.setId(jsonObject.getInt("id"));
+                cat.setNombre(jsonObject.getString("nombre"));
+                resultado.add(cat);
+            }
         }
+        if(in !=null) in.close();
+        if (urlConnection !=null) urlConnection.disconnect();
+
+        return resultado;
+    }
 }
