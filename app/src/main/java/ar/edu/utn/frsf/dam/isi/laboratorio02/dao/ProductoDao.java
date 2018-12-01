@@ -20,11 +20,11 @@ public interface ProductoDao {
     Producto getProductoId(Integer id);
 
     @Insert
-    long insert(Producto cat);
+    long insert(Producto p);
 
     @Update
-    void update(Producto cat);
+    void update(Producto p);
 
     @Delete
-    void delete(Producto cat);
+    void delete(Producto p);
 }

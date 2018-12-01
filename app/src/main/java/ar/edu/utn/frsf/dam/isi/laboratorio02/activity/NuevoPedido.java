@@ -25,7 +25,7 @@ import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 
 public class NuevoPedido extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class NuevoPedido extends AppCompatActivity {
     private Pedido unPedido;
     private PedidoRepository repositorioPedido;
     private ProductoRepository repositorioProducto;
-    private ArrayAdapter<PedidoDetalle> adaptadorLstProductoItem;
+    private ArrayAdapter<DetallePedido> adaptadorLstProductoItem;
     private int idPedidoMostrar = 0;
 
     @Override
@@ -73,7 +73,7 @@ public class NuevoPedido extends AppCompatActivity {
             idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
             repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
-            adaptadorLstProductoItem = new ArrayAdapter<PedidoDetalle>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
+            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
             edtPedidoCorreo.setText(unPedido.getMailContacto());
             edtPedidoCorreo.setEnabled(false);
@@ -102,7 +102,7 @@ public class NuevoPedido extends AppCompatActivity {
             unPedido = new Pedido();
             repositorioPedido = new PedidoRepository();
             repositorioProducto = new ProductoRepository();
-            adaptadorLstProductoItem = new ArrayAdapter<PedidoDetalle>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
+            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
             SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(NuevoPedido.this);
             edtPedidoCorreo.setText(preferences.getString("edtCorreoPreference",""));
@@ -228,7 +228,7 @@ public class NuevoPedido extends AppCompatActivity {
             int idProducto = data.getExtras().getInt("idProducto");
             Producto item = repositorioProducto.buscarPorId(idProducto);
             int cantidad = data.getExtras().getInt("cantidad");
-            PedidoDetalle detallePedido = new PedidoDetalle(cantidad, item);
+            DetallePedido detallePedido = new DetallePedido(cantidad, item);
             detallePedido.setPedido(unPedido);
             double precioTotal = unPedido.total();
             lblPedido.setText("Total del Pedido: $" + precioTotal);
