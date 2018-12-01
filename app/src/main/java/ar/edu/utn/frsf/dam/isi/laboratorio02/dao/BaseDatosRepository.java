@@ -7,12 +7,14 @@ import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 public class BaseDatosRepository {
     private static BaseDatosRepository _INSTANCIA_UNICA = null;
     private BaseDatos db;
     private CategoriaDao categoriaDao;
     private ProductoDao productoDao;
+    private PedidoDao pedidoDao;
 
 
     private BaseDatosRepository(Context ctx) {
@@ -22,6 +24,7 @@ public class BaseDatosRepository {
                 .build();
         categoriaDao = db.categoriaDao();
         productoDao = db.productoDao();
+        pedidoDao = db.pedidoDao();
 
     }
 
@@ -43,12 +46,20 @@ public class BaseDatosRepository {
         return productoDao;
     }
 
+    public PedidoDao getPedidoDao() {
+        return pedidoDao;
+    }
+
     public void setCategoriaDao(CategoriaDao categoriaDao) {
         this.categoriaDao = categoriaDao;
     }
 
     public void setProductoDao(ProductoDao productoDao) {
         this.productoDao = productoDao;
+    }
+
+    public void setPedidoDao(PedidoDao pedidoDao) {
+        this.pedidoDao = pedidoDao;
     }
 
     public List<Categoria> ListaCategorias() {
@@ -59,8 +70,16 @@ public class BaseDatosRepository {
         return productoDao.getAll();
     }
 
+    public List<Pedido> ListaPedidos() {
+        return pedidoDao.getAll();
+    }
+
     public void actualizarCategoria(Categoria cat) {
         categoriaDao.update(cat);
+    }
+
+    public void actualizarPedido(Pedido pedido) {
+        pedidoDao.update(pedido);
     }
 
     public void actualizarProducto(Producto prod) {
@@ -75,7 +94,16 @@ public class BaseDatosRepository {
         productoDao.delete(prod);
     }
 
-    public Producto buscarProductoID(Integer id){return productoDao.getProductoId(id);}
+    public void borrarPedido(Pedido pedido) {
+        pedidoDao.delete(pedido);
+    }
 
+    public Producto buscarProductoID(Integer id) {
+        return productoDao.getProductoId(id);
+    }
+
+    public Pedido buscarPedidoID(Integer id) {
+        return pedidoDao.getPedidoId(id);
+    }
 
 }

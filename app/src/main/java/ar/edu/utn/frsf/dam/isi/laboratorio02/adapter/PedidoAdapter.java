@@ -3,7 +3,6 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,10 +14,10 @@ import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.Estado.*;
 
 public class PedidoAdapter extends ArrayAdapter<Pedido> {
@@ -61,7 +60,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         holder.tvHoraEntrega.setText("Fecha: " + sdf.format(pedido.getFecha()));
         colorEstado(pedido, holder);
         deshabilitaBoton(pedido, holder, datos);
-        for (PedidoDetalle p : pedido.getDetalle()) {
+        for (DetallePedido p : pedido.getDetalle()) {
             cantidad += p.getCantidad();
         }
         holder.tvCantidadItems.setText("Items: " + cantidad);
@@ -84,7 +83,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             public void onClick(View v) {
                 int indice= (int) v.getTag();
                 Pedido pedidoSel=datos.get(indice);
-                Intent i= new Intent(getContext(), NuevoPedido.class);
+                Intent i= new Intent(getContext(), NuevoPedidoActivity.class);
                 i.putExtra("VER_DETALLE", 1);
                 i.putExtra("ID_PEDIDO", pedidoSel.getId());
                 ctx.startActivity(i);

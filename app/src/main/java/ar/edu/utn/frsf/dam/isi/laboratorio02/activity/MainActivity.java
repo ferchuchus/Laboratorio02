@@ -30,19 +30,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         createNotificationChannel();
 
-        if (getIntent().getExtras() != null) {
+     /*     Para Notificaciones Push en segundo plano.
+            if (getIntent().getExtras() != null) {
             int idPedido = Integer.parseInt(getIntent().getExtras().getString("idPedido"));
             Intent i = new Intent();
             i.putExtra("idPedido", idPedido);
             i.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_LISTO");
             sendBroadcast(i);
         }
-
+     */
         btnNuevoPedido = (Button) findViewById(R.id.btnMainNuevoPedido);
         btnNuevoPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
+                Intent i = new Intent(getApplicationContext(), NuevoPedidoActivity.class);
                 i.putExtra("VER_DETALLE",0);
                 startActivity(i);
             }
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         btnHistorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), HistorialPedido.class);
+                Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
                 startActivity(i);
             }
         });
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         btnListaProductos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ListaProducto.class);
+                Intent i = new Intent(getApplicationContext(), ListarProductoActivity.class);
                 i.putExtra("NUEVO_PEDIDO",0);
                 startActivity(i);
             }

@@ -84,7 +84,6 @@ public class CategoriaActivity extends AppCompatActivity {
                 final List<Categoria> cate=catDao.getAll();
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Log.d("DECIME QUE TIENEEE","DECIME QUE TIENEEE:" + cate.get(0)+","+cate.get(1));
                         Toast.makeText(CategoriaActivity.this,
                                 "La categoria "+cate.get(cate.size()-1)+" fue guardada con exito", Toast.LENGTH_LONG).show();
                     }
