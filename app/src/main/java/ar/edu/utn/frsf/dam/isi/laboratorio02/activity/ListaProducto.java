@@ -11,12 +11,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
@@ -29,8 +25,7 @@ public class ListaProducto extends AppCompatActivity {
     private Button btnProdAddPedido;
     private ProductoRepository repositorio_prod=new ProductoRepository();
     private Categoria categoriaSelc;
-    //private final List<Categoria> datosCategoria= repositorio_prod.getCategorias();
-    private List<Categoria> datosCategoria;
+    private final List<Categoria> datosCategoria= repositorio_prod.getCategorias();
     private ArrayAdapter<Categoria> adaptadorSpinner;
     private Spinner cmbProductoCategoria;
     private ListView lstProductos;
@@ -43,24 +38,21 @@ public class ListaProducto extends AppCompatActivity {
         setContentView(R.layout.activity_lista_producto);
         edtProdCantidad=(EditText) findViewById(R.id.edtProdCantidad);
         btnProdAddPedido= (Button) findViewById(R.id.btnProdAddPedido);
-
-        cargarCombo();
-
-        /*cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
+        cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
         lstProductos= (ListView) findViewById(R.id.lstProductos);
         adaptadorSpinner = new ArrayAdapter<Categoria>(ListaProducto.this,android.R.layout.simple_list_item_1,datosCategoria);
         categoriaSelc= datosCategoria.get(0);
         datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
         adaptadorLstProductos= new ArrayAdapter<Producto>(ListaProducto.this,android.R.layout.simple_list_item_single_choice, datosProductos);
         cmbProductoCategoria.setAdapter(adaptadorSpinner);
-        lstProductos.setAdapter(adaptadorLstProductos);*/
+        lstProductos.setAdapter(adaptadorLstProductos);
         datosMain=this.getIntent().getExtras();
         nuevo_pedido=datosMain.getInt("NUEVO_PEDIDO");
         if(nuevo_pedido==0){
             edtProdCantidad.setEnabled(false);
             btnProdAddPedido.setEnabled(false);
         }
-        /*cmbProductoCategoria.setOnItemSelectedListener(
+        cmbProductoCategoria.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -73,13 +65,13 @@ public class ListaProducto extends AppCompatActivity {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) { }
                 }
-        );*/
-        /*lstProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        );
+        lstProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 productoSelc= (Producto)adapterView.getItemAtPosition(position);
             }
-        });*/
+        });
         btnProdAddPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,56 +82,6 @@ public class ListaProducto extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void cargarCombo (){
-        Runnable r= new Runnable() {
-            @Override
-            public void run() {
-                CategoriaRest catRest= new CategoriaRest();
-                try {
-                    datosCategoria= catRest.listarTodas();}
-                catch (IOException ie){ie.printStackTrace();}
-                catch (JSONException je){je.printStackTrace();}
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
-                        lstProductos= (ListView) findViewById(R.id.lstProductos);
-                        adaptadorSpinner = new ArrayAdapter<Categoria>(ListaProducto.this,android.R.layout.simple_list_item_1,datosCategoria);
-                        categoriaSelc= datosCategoria.get(0);
-                        datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
-                        adaptadorLstProductos= new ArrayAdapter<Producto>(ListaProducto.this,android.R.layout.simple_list_item_single_choice, datosProductos);
-                        cmbProductoCategoria.setAdapter(adaptadorSpinner);
-                        lstProductos.setAdapter(adaptadorLstProductos);
-                        cmbProductoCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                                categoriaSelc= (Categoria) adapterView.getItemAtPosition(position);
-                                datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
-                                adaptadorLstProductos.clear();
-                                adaptadorLstProductos.addAll(datosProductos);
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-                        lstProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                                productoSelc= (Producto)adapterView.getItemAtPosition(position);
-                            }
-                        });
-                    }
-                });
-
-            }
-        };
-        Thread combo= new Thread(r);
-        combo.start();
     }
 
 

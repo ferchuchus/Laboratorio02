@@ -46,10 +46,5 @@
         android:text="Categorias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btnProducto"
-        android:text="Producto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

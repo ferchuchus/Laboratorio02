@@ -1,11 +1,10 @@
-package ar.edu.utn.frsf.dam.isi.laboratorio02.service;
+package ar.edu.utn.frsf.dam.isi.laboratorio02;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import ar.edu.utn.frsf.dam.isi.laboratorio02.receiver.EstadoPedidoReceiver;
 
 public class RestoMessagingService extends FirebaseMessagingService {
 
