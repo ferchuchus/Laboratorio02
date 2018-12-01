@@ -8,11 +8,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.List;
+
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.adapter.PedidoAdapter;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
-
 
 
 public class HistorialPedidoActivity extends AppCompatActivity {
@@ -20,13 +23,17 @@ public class HistorialPedidoActivity extends AppCompatActivity {
     private Button btnNuevo;
     private Button btnMenu;
     private ArrayAdapter<Pedido> pedidoArrayAdapter;
-    private PedidoRepository repositorioPedido= new PedidoRepository();
+    private PedidoRepository repositorioPedido = new PedidoRepository();
     private ListView listaPedidos;
+    private PedidoDao pedDao;
+    private List<Pedido> pedidoList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial_pedido);
+        pedDao = BaseDatosRepository.getInstance(this).getPedidoDao();
 
         btnNuevo = (Button) findViewById(R.id.btnHistorialNuevo);
         btnNuevo.setOnClickListener(new View.OnClickListener() {
@@ -46,11 +53,26 @@ public class HistorialPedidoActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        if(!repositorioPedido.getLista().isEmpty()) {
-            listaPedidos=(ListView)findViewById(R.id.lstHistorialPedidos);
+        buscarPedidos();
+        if (!pedidoList.isEmpty()) {
+            listaPedidos = (ListView) findViewById(R.id.lstHistorialPedidos);
+            listaPedidos.setAdapter(new PedidoAdapter(this, pedidoList));
+        }
+        /*if (!repositorioPedido.getLista().isEmpty()) {
+            listaPedidos = (ListView) findViewById(R.id.lstHistorialPedidos);
             listaPedidos.setAdapter(new PedidoAdapter(this, repositorioPedido.getLista()));
 
-        }
+        }*/
+    }
+
+    private void buscarPedidos() {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                pedidoList = pedDao.getAll();
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
     }
 }
