@@ -30,14 +30,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         createNotificationChannel();
 
-        if (getIntent().getExtras() != null) {
+     /*     Para Notificaciones Push en segundo plano.
+            if (getIntent().getExtras() != null) {
             int idPedido = Integer.parseInt(getIntent().getExtras().getString("idPedido"));
             Intent i = new Intent();
             i.putExtra("idPedido", idPedido);
             i.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_LISTO");
             sendBroadcast(i);
         }
-
+     */
         btnNuevoPedido = (Button) findViewById(R.id.btnMainNuevoPedido);
         btnNuevoPedido.setOnClickListener(new View.OnClickListener() {
             @Override

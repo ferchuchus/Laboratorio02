@@ -11,7 +11,7 @@ import java.util.List;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 @Dao
-interface PedidoDao {
+public interface PedidoDao {
     @Query("SELECT * FROM Pedido")
     List<Pedido> getAll();
 
