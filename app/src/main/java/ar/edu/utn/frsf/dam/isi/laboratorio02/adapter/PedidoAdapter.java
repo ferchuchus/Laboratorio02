@@ -14,7 +14,7 @@ import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
@@ -83,7 +83,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             public void onClick(View v) {
                 int indice= (int) v.getTag();
                 Pedido pedidoSel=datos.get(indice);
-                Intent i= new Intent(getContext(), NuevoPedido.class);
+                Intent i= new Intent(getContext(), NuevoPedidoActivity.class);
                 i.putExtra("VER_DETALLE", 1);
                 i.putExtra("ID_PEDIDO", pedidoSel.getId());
                 ctx.startActivity(i);

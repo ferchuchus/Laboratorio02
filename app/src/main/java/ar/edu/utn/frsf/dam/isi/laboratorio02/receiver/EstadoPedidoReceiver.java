@@ -9,8 +9,8 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import java.text.SimpleDateFormat;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.HistorialPedido;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.HistorialPedidoActivity;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
@@ -29,7 +29,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
         switch (intent.getAction()){
             case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO":
                 p.setEstado(Pedido.Estado.ACEPTADO);
-                destino = new Intent(context, NuevoPedido.class);
+                destino = new Intent(context, NuevoPedidoActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 destino.putExtra("VER_DETALLE", 1);
                 destino.putExtra("ID_PEDIDO", p.getId());
@@ -47,7 +47,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 
             case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION":
                 p.setEstado(Pedido.Estado.EN_PREPARACION);
-                destino= new Intent(context, HistorialPedido.class);
+                destino= new Intent(context, HistorialPedidoActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent=PendingIntent.getActivity(context,0, destino, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -63,7 +63,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 
             case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_LISTO":
                 p.setEstado(Pedido.Estado.LISTO);
-                destino = new Intent(context, NuevoPedido.class);
+                destino = new Intent(context, NuevoPedidoActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 destino.putExtra("VER_DETALLE", 1);
                 destino.putExtra("ID_PEDIDO", p.getId());

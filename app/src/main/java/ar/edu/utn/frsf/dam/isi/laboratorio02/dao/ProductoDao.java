@@ -8,6 +8,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 
 
@@ -18,6 +19,9 @@ public interface ProductoDao {
 
     @Query("SELECT * FROM Producto WHERE id=:id")
     Producto getProductoId(Integer id);
+
+    @Query("SELECT * FROM Producto WHERE cat_id=:idCat")
+    List<Producto> getProductosAsociados(Integer idCat);
 
     @Insert
     long insert(Producto p);

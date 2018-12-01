@@ -3,12 +3,9 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
@@ -18,7 +15,7 @@ import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 
 
-public class HistorialPedido extends AppCompatActivity {
+public class HistorialPedidoActivity extends AppCompatActivity {
 
     private Button btnNuevo;
     private Button btnMenu;
@@ -35,7 +32,7 @@ public class HistorialPedido extends AppCompatActivity {
         btnNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), NuevoPedido.class);
+                Intent i = new Intent(getApplicationContext(), NuevoPedidoActivity.class);
                 i.putExtra("VER_DETALLE", 0);
                 startActivity(i);
             }

@@ -28,7 +28,7 @@ import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 
-public class NuevoPedido extends AppCompatActivity {
+public class NuevoPedidoActivity extends AppCompatActivity {
 
     private EditText edtPedidoCorreo;
     private RadioGroup optPedidoModoEntrega;
@@ -73,7 +73,7 @@ public class NuevoPedido extends AppCompatActivity {
             idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
             repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
-            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
+            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
             edtPedidoCorreo.setText(unPedido.getMailContacto());
             edtPedidoCorreo.setEnabled(false);
@@ -100,11 +100,11 @@ public class NuevoPedido extends AppCompatActivity {
             lblPedido.setText("Total del Pedido: $" + unPedido.total());
         } else {
             unPedido = new Pedido();
-            repositorioPedido = new PedidoRepository();
-            repositorioProducto = new ProductoRepository();
-            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedido.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
+        //    repositorioPedido = new PedidoRepository();
+        //    repositorioProducto = new ProductoRepository();
+            adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
             lstPedidoItem.setAdapter(adaptadorLstProductoItem);
-            SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(NuevoPedido.this);
+            SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(NuevoPedidoActivity.this);
             edtPedidoCorreo.setText(preferences.getString("edtCorreoPreference",""));
             if(!preferences.getBoolean("optRetirarPreference",true)){
                 optPedidoRetira.setChecked(false);
@@ -130,7 +130,7 @@ public class NuevoPedido extends AppCompatActivity {
         btnAgregarProducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(NuevoPedido.this, ListaProducto.class);
+                Intent i = new Intent(NuevoPedidoActivity.this, ListarProductoActivity.class);
                 i.putExtra("NUEVO_PEDIDO", 1);
                 startActivityForResult(i, 1);
             }
@@ -145,27 +145,27 @@ public class NuevoPedido extends AppCompatActivity {
                 final int valorHora = Integer.valueOf(horaIngresada[0]);
                 final int valorMinutos = Integer.valueOf(horaIngresada[1]);
                 if (edtPedidoCorreo.getText().toString().isEmpty()) {
-                    Toast.makeText(NuevoPedido.this,
+                    Toast.makeText(NuevoPedidoActivity.this,
                             "Debe ingresar el correo", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (optPedidoEnvio.isChecked() && edtPedidoDireccion.getText().toString().isEmpty()) {
-                    Toast.makeText(NuevoPedido.this,
+                    Toast.makeText(NuevoPedidoActivity.this,
                             "Debe ingresar la direccion", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (lstPedidoItem.getAdapter().getCount() == 0) {
-                    Toast.makeText(NuevoPedido.this,
+                    Toast.makeText(NuevoPedidoActivity.this,
                             "Debe agregar al menos un producto", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (valorHora < 0 || valorHora > 23) {
-                    Toast.makeText(NuevoPedido.this,
+                    Toast.makeText(NuevoPedidoActivity.this,
                             "La hora ingresada " + valorHora + " es incorrecta", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (valorMinutos < 0 || valorMinutos > 59) {
-                    Toast.makeText(NuevoPedido.this,
+                    Toast.makeText(NuevoPedidoActivity.this,
                             "Los minutos " + valorMinutos + " son incorrectos", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -180,7 +180,7 @@ public class NuevoPedido extends AppCompatActivity {
                 repositorioPedido.guardarPedido(unPedido);
 
                 cambiarEstadoPedido();
-                Intent i = new Intent(getApplicationContext(), HistorialPedido.class);
+                Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
                 startActivity(i);
             }
 
