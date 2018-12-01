@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaDao;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
@@ -37,7 +38,7 @@ public class CategoriaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_categoria);
         textoCat = (EditText) findViewById(R.id.txtNombreCategoria);
 
-        catDao = CategoriaRepository.getInstance(this).getCategoriaDao();
+        catDao = BaseDatosRepository.getInstance(this).getCategoriaDao();
 
         handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -83,6 +84,7 @@ public class CategoriaActivity extends AppCompatActivity {
                 final List<Categoria> cate=catDao.getAll();
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        Log.d("DECIME QUE TIENEEE","DECIME QUE TIENEEE:" + cate.get(0)+","+cate.get(1));
                         Toast.makeText(CategoriaActivity.this,
                                 "La categoria "+cate.get(cate.size()-1)+" fue guardada con exito", Toast.LENGTH_LONG).show();
                     }
