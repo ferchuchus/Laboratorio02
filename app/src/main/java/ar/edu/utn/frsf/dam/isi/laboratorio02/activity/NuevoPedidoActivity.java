@@ -25,6 +25,7 @@ import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
@@ -51,6 +52,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     private int idPedidoMostrar;
 
     private PedidoDao pedDao;
+    private ProductoDao prodDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +74,13 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         optPedidoRetira.setChecked(true);
 
         pedDao = BaseDatosRepository.getInstance(this).getPedidoDao();
+        prodDao = BaseDatosRepository.getInstance(this).getProductoDao();
 
 
         Intent i = getIntent();
         if (((int) i.getExtras().get("VER_DETALLE")) == 1) {
             idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
-            buscarPedido(idPedidoMostrar);
+            buscarPedidoMostrar(idPedidoMostrar);
            /*repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
             adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -236,17 +239,38 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int requestResult, @Nullable Intent data) {
         if (requestCode == 1 && requestResult == RESULT_OK) {
             int idProducto = data.getExtras().getInt("idProducto");
-            Producto item = repositorioProducto.buscarPorId(idProducto);
+            // Producto item = repositorioProducto.buscarPorId(idProducto);
             int cantidad = data.getExtras().getInt("cantidad");
-            DetallePedido detallePedido = new DetallePedido(cantidad, item);
+            buscarPorducto(idProducto, cantidad);
+            /*DetallePedido detallePedido = new DetallePedido(cantidad, item);
             detallePedido.setPedido(unPedido);
             double precioTotal = unPedido.total();
             lblPedido.setText("Total del Pedido: $" + precioTotal);
-            adaptadorLstProductoItem.notifyDataSetChanged();
+            adaptadorLstProductoItem.notifyDataSetChanged();*/
         }
     }
 
-    private void buscarPedido(final Integer idPedMostrar) {
+    private void buscarPorducto(final Integer idProd, final Integer cant) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                final Producto item = prodDao.getProductoId(idProd);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        DetallePedido detallePedido = new DetallePedido(cant, item);
+                        detallePedido.setPedido(unPedido);
+                        double precioTotal = unPedido.total();
+                        lblPedido.setText("Total del Pedido: $" + precioTotal);
+                        adaptadorLstProductoItem.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
+    }
+
+    private void buscarPedidoMostrar(final Integer idPedMostrar) {
         Runnable r = new Runnable() {
             @Override
             public void run() {
