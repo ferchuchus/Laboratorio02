@@ -40,8 +40,5 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:$room_version"
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.android.support:gridlayout-v7:28.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

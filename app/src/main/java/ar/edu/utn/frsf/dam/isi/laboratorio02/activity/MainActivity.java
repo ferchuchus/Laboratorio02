@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.service.PrepararPedidoService;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.PrepararPedidoService;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 
 
@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnPrepararPedidos;
     private Button btnConfiguracion;
     private Button btnCategoria;
-    private Button btnProducto;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +88,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i= new Intent(getApplicationContext(), CategoriaActivity.class);
-                startActivity(i);
-            }
-        });
-
-        btnProducto= (Button) findViewById(R.id.btnProducto);
-        btnProducto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i= new Intent(getApplicationContext(), GestionProductoActivity.class);
                 startActivity(i);
             }
         });

@@ -8,113 +8,98 @@
     tools:context=".activity.NuevoPedido">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/lblTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pedido_titulo" />
-
+        android:text="@string/pedido_titulo"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pedido_lbl_correo" />
-
+        android:text="@string/pedido_lbl_correo"/>
     <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/edtPedidoCorreo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress" />
-
+        android:inputType="textEmailAddress"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pedido_lbl_mod_entrega" />
-
+        android:text="@string/pedido_lbl_mod_entrega"/>
     <RadioGroup
-        android:id="@+id/optPedidoModoEntrega"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:id="@+id/optPedidoModoEntrega">
         <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/optPedidoRetira"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pedido_optLocal" />
-
+            android:text="@string/pedido_optLocal"/>
         <RadioButton
-            android:id="@+id/optPedidoEnvio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pedido_optDomicilio" />
+            android:id="@+id/optPedidoEnvio"
+            android:text="@string/pedido_optDomicilio"/>
     </RadioGroup>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pedido_lbl_direccion" />
-
+        android:text="@string/pedido_lbl_direccion"/>
     <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/edtPedidoDireccion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
-
+        android:inputType="text"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pedido_lbl_hora_entrega" />
-
+        android:text="@string/pedido_lbl_hora_entrega"/>
     <EditText
-        android:id="@+id/edtPedidoHoraEntrega"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/edtPedidoHoraEntrega"
         android:inputType="datetime"
-        android:text="00:00" />
+        android:text="00:00"/>
 
     <ListView
         android:id="@+id/lstPedidoItem"
         android:layout_width="wrap_content"
         android:layout_height="141dp"></ListView>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/btnPedidoAddProducto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pedido_btnAddProd" />
-
+            android:text="@string/pedido_btnAddProd"/>
         <Button
-            android:id="@+id/btnPedidoQuitarProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pedido_btnQuitarProd" />
+            android:id="@+id/btnPedidoQuitarProducto"
+            android:text="@string/pedido_btnQuitarProd"/>
     </LinearLayout>
-
     <TextView
-        android:id="@+id/lblPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total del Pedido: $0.00" />
-
+        android:id="@+id/lblPedido"
+        android:text="Total del Pedido: $0.00"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/btnHacerPedido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pedido_btnHacer" />
-
+            android:text="@string/pedido_btnHacer"/>
         <Button
-            android:id="@+id/btnVolver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pedido_btnVolver" />
+            android:id="@+id/btnVolver"
+            android:text="@string/pedido_btnVolver"/>
     </LinearLayout>
 </LinearLayout>

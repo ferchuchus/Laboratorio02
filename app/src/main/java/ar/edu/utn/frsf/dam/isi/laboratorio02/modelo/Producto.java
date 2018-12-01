@@ -1,24 +1,13 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.modelo;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-
 import java.util.Objects;
 
-
-@Entity
 public class Producto {
-    @PrimaryKey(autoGenerate = true)
+
     private Integer id;
-    @ColumnInfo(name="Nombre")
     private String nombre;
-    @ColumnInfo(name = "Descripcion")
     private String descripcion;
-    @ColumnInfo(name = "Precio")
     private Double precio;
-    @Embedded(prefix = "cat_")
     private Categoria categoria;
 
     public Producto(String nombre, String descripcion, Double precio, Categoria categoria) {
@@ -41,8 +30,6 @@ public class Producto {
         this.precio = precio;
         this.categoria = categoria;
     }
-
-    public Producto(){};
 
     public Integer getId() {
         return id;
