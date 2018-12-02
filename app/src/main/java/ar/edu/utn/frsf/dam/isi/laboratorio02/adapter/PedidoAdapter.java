@@ -25,9 +25,9 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
     private List<Pedido> datos;
     private int cantidad = 0;
 
-    public PedidoAdapter(Context act, List<Pedido> objetos) {
-        super(act, R.layout.activity_historial_pedido, objetos);
-        this.ctx = act;
+    public PedidoAdapter(Context context, List<Pedido> objetos) {
+        super(context, R.layout.activity_historial_pedido, objetos);
+        this.ctx = context;
         this.datos = objetos;
     }
 

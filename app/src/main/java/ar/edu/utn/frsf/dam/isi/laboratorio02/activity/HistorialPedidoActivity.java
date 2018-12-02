@@ -54,11 +54,7 @@ public class HistorialPedidoActivity extends AppCompatActivity {
             }
         });
         buscarPedidos();
-        if (!pedidoList.isEmpty()) {
-            listaPedidos = (ListView) findViewById(R.id.lstHistorialPedidos);
-            listaPedidos.setAdapter(new PedidoAdapter(this, pedidoList));
-        }
-        /*if (!repositorioPedido.getLista().isEmpty()) {
+       /*if (!repositorioPedido.getLista().isEmpty()) {
             listaPedidos = (ListView) findViewById(R.id.lstHistorialPedidos);
             listaPedidos.setAdapter(new PedidoAdapter(this, repositorioPedido.getLista()));
 
@@ -70,6 +66,10 @@ public class HistorialPedidoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 pedidoList = pedDao.getAll();
+                if (!pedidoList.isEmpty()) {
+                listaPedidos = (ListView) findViewById(R.id.lstHistorialPedidos);
+                listaPedidos.setAdapter(new PedidoAdapter(getApplicationContext(), pedidoList));
+                }
             }
         };
         Thread hiloRest = new Thread(r);

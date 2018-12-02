@@ -79,8 +79,8 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         if (((int) i.getExtras().get("VER_DETALLE")) == 1) {
-            idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
-            buscarPedidoMostrar(idPedidoMostrar);
+            ///idPedidoMostrar = i.getExtras().getInt("ID_PEDIDO");
+            buscarPedidoMostrar();
            /*repositorioPedido= new PedidoRepository();
             unPedido = repositorioPedido.buscarPorId(idPedidoMostrar);
             adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -270,11 +270,12 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         hiloRest.start();
     }
 
-    private void buscarPedidoMostrar(final Integer idPedMostrar) {
+    private void buscarPedidoMostrar() {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                unPedido = pedDao.getPedidoId(idPedMostrar);
+                List<Pedido> pedidoList=pedDao.getAll();
+                unPedido = pedDao.getPedidoId(pedidoList.get(pedidoList.size()-1).getId());
                 runOnUiThread(new Runnable() {
                     public void run() {
                         adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -319,7 +320,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(NuevoPedidoActivity.this,
-                                "El pedido " + ped.get(ped.size() - 1) + " fue guardada con exito", Toast.LENGTH_LONG).show();
+                                "El pedido fue guardado con exito", Toast.LENGTH_LONG).show();
                     }
                 });
             }
