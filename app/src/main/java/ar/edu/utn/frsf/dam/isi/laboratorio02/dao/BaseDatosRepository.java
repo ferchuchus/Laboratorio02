@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
@@ -15,6 +16,7 @@ public class BaseDatosRepository {
     private CategoriaDao categoriaDao;
     private ProductoDao productoDao;
     private PedidoDao pedidoDao;
+    private DetallePedidoDao detalleDao;
 
 
     private BaseDatosRepository(Context ctx) {
@@ -25,6 +27,7 @@ public class BaseDatosRepository {
         categoriaDao = db.categoriaDao();
         productoDao = db.productoDao();
         pedidoDao = db.pedidoDao();
+        detalleDao = db.detallePedidoDao();
 
     }
 
@@ -34,9 +37,6 @@ public class BaseDatosRepository {
         return _INSTANCIA_UNICA;
     }
 
-    public void borrarTodo() {
-        this.db.clearAllTables();
-    }
 
     public CategoriaDao getCategoriaDao() {
         return categoriaDao;
@@ -50,60 +50,7 @@ public class BaseDatosRepository {
         return pedidoDao;
     }
 
-    public void setCategoriaDao(CategoriaDao categoriaDao) {
-        this.categoriaDao = categoriaDao;
+    public DetallePedidoDao getDetalleDao() {
+        return detalleDao;
     }
-
-    public void setProductoDao(ProductoDao productoDao) {
-        this.productoDao = productoDao;
-    }
-
-    public void setPedidoDao(PedidoDao pedidoDao) {
-        this.pedidoDao = pedidoDao;
-    }
-
-    public List<Categoria> ListaCategorias() {
-        return categoriaDao.getAll();
-    }
-
-    public List<Producto> ListaProductos() {
-        return productoDao.getAll();
-    }
-
-    public List<Pedido> ListaPedidos() {
-        return pedidoDao.getAll();
-    }
-
-    public void actualizarCategoria(Categoria cat) {
-        categoriaDao.update(cat);
-    }
-
-    public void actualizarPedido(Pedido pedido) {
-        pedidoDao.update(pedido);
-    }
-
-    public void actualizarProducto(Producto prod) {
-        productoDao.update(prod);
-    }
-
-    public void borrarCategoria(Categoria cat) {
-        categoriaDao.delete(cat);
-    }
-
-    public void borrarProducto(Producto prod) {
-        productoDao.delete(prod);
-    }
-
-    public void borrarPedido(Pedido pedido) {
-        pedidoDao.delete(pedido);
-    }
-
-    public Producto buscarProductoID(Integer id) {
-        return productoDao.getProductoId(id);
-    }
-
-    public Pedido buscarPedidoID(Integer id) {
-        return pedidoDao.getPedidoId(id);
-    }
-
 }
