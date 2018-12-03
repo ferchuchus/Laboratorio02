@@ -1,11 +1,13 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,12 +25,14 @@ import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.DetallePedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoConDetalles;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 
 public class NuevoPedidoActivity extends AppCompatActivity {
@@ -53,6 +57,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
     private PedidoDao pedDao;
     private ProductoDao prodDao;
+    private DetallePedidoDao detDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
         pedDao = BaseDatosRepository.getInstance(this).getPedidoDao();
         prodDao = BaseDatosRepository.getInstance(this).getProductoDao();
+        detDao = BaseDatosRepository.getInstance(this).getDetalleDao();
 
 
         Intent i = getIntent();
@@ -255,9 +261,9 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final Producto item = prodDao.getProductoId(idProd);
-                runOnUiThread(new Runnable() {
+                final DetallePedido detallePedido = new DetallePedido(cant, item);
+                 runOnUiThread(new Runnable() {
                     public void run() {
-                        DetallePedido detallePedido = new DetallePedido(cant, item);
                         detallePedido.setPedido(unPedido);
                         double precioTotal = unPedido.total();
                         lblPedido.setText("Total del Pedido: $" + precioTotal);
@@ -274,8 +280,8 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                List<Pedido> pedidoList=pedDao.getAll();
-                unPedido = pedDao.getPedidoId(pedidoList.get(pedidoList.size()-1).getId());
+                List<Pedido> pedidoList = pedDao.getAll();
+                unPedido = pedDao.getPedidoId(pedidoList.get(pedidoList.size() - 1).getId());
                 runOnUiThread(new Runnable() {
                     public void run() {
                         adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -316,7 +322,18 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 pedDao.insert(pedido);
-                final List<Pedido> ped = pedDao.getAll();
+                List<Pedido> ped = pedDao.getAll();
+                Log.d("unPedido  "," "+pedido);
+                Log.d ("detallePedido"," "+pedido.getDetalle());
+                for(DetallePedido det : pedido.getDetalle()){
+                    Log.d("PedidoBD",""+ped.get(ped.size()-1));
+                    det.setPedido(ped.get(ped.size()-1));
+                    Log.d ("detalless"," "+det);
+                    detDao.insert(det);
+                }
+                List<PedidoConDetalles> detallePedidosList=pedDao.buscarPorIdconDetalles(ped.get(ped.size()-1).getId());
+                Log.d ("PED_DETALLEPEDIDO"," "+detallePedidosList.get(0).pedido);
+
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(NuevoPedidoActivity.this,

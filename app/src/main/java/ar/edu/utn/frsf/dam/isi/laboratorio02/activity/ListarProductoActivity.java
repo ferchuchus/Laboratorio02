@@ -3,6 +3,7 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -129,8 +130,11 @@ public class ListarProductoActivity extends AppCompatActivity {
                         cmbProductoCategoria = (Spinner) findViewById(R.id.cmbProductosCategoria);
                         lstProductos = (ListView) findViewById(R.id.lstProductos);
                         adaptadorSpinner = new ArrayAdapter<Categoria>(ListarProductoActivity.this, android.R.layout.simple_list_item_1, datosCategoria);
-                        categoriaSelc = datosCategoria.get(0);
-                        cargarProductosAsociados(categoriaSelc);
+                        Log.d("PERRO QUE TENESS???","Tengo: "+datosCategoria);
+                        if(!datosCategoria.isEmpty()){
+                            categoriaSelc = datosCategoria.get(0);
+                            cargarProductosAsociados(categoriaSelc);
+                        }
                     }
                 });
 
