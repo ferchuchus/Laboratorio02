@@ -197,9 +197,9 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
                 guardarPedido(unPedido);
 
-                cambiarEstadoPedido();
-                Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
-                startActivity(i);
+
+              //  Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
+               // startActivity(i);
             }
 
         });
@@ -262,7 +262,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             public void run() {
                 final Producto item = prodDao.getProductoId(idProd);
                 final DetallePedido detallePedido = new DetallePedido(cant, item);
-                 runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     public void run() {
                         detallePedido.setPedido(unPedido);
                         double precioTotal = unPedido.total();
@@ -323,21 +323,16 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             public void run() {
                 pedDao.insert(pedido);
                 List<Pedido> ped = pedDao.getAll();
-                Log.d("unPedido  "," "+pedido);
-                Log.d ("detallePedido"," "+pedido.getDetalle());
-                for(DetallePedido det : pedido.getDetalle()){
-                    Log.d("PedidoBD",""+ped.get(ped.size()-1));
-                    det.setPedido(ped.get(ped.size()-1));
-                    Log.d ("detalless"," "+det);
+                for (DetallePedido det : pedido.getDetalle()) {
+                    det.setPedido(ped.get(ped.size() - 1));
                     detDao.insert(det);
                 }
-                List<PedidoConDetalles> detallePedidosList=pedDao.buscarPorIdconDetalles(ped.get(ped.size()-1).getId());
-                Log.d ("PED_DETALLEPEDIDO"," "+detallePedidosList.get(0).pedido);
-
+                cambiarEstadoPedido();
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(NuevoPedidoActivity.this,
                                 "El pedido fue guardado con exito", Toast.LENGTH_LONG).show();
+
                     }
                 });
             }
@@ -346,19 +341,31 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         hiloRest.start();
     }
 
+
     private void buscarPedidos() {
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 final List<Pedido> lista = pedDao.getAll();
                 Intent intent = new Intent();
+                Log.d("TAMAÑOLISTA", " " + lista.size());
                 for (Pedido p : lista) {
+                    Log.d("PEDIDO", " " + p);
+                    Log.d("PEDIDO  ID", " " + p.getId());
+                    Log.d("ESTADO", " " + p.getEstado());
                     if (p.getEstado().equals(Pedido.Estado.REALIZADO)) {
                         intent.putExtra("idPedido", p.getId());
                         intent.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO");
                         sendBroadcast(intent);
                     }
                 }
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
+                        startActivity(i);
+
+                    }
+                });
             }
         };
         Thread hiloRest = new Thread(r);

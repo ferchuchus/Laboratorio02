@@ -7,18 +7,12 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.HistorialPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 
@@ -33,7 +27,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
         String accion = intent.getAction();
         pedido=buscarPedido(intent.getExtras().getInt("idPedido"), accion,intent,context);
         //  Pedido p = pedidoRepo.buscarPorId(intent.getExtras().getInt("idPedido"));
-      //  prueba(pedido,intent,context);
+      //  notificacionPedido(pedido,intent,context);
 /*        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Intent destino;
         PendingIntent pendingIntent = null;
@@ -102,7 +96,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 */
     }
 
-    private void prueba(final Pedido p, final Intent i,final Context c){
+    private void notificacionPedido(final Pedido p, final Intent i, final Context c){
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -178,7 +172,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 pedDao.update(ped);
-                prueba(ped,i,c);
+                notificacionPedido(ped,i,c);
             }
 
         };
