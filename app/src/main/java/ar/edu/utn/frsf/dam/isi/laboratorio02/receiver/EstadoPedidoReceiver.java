@@ -6,19 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.HistorialPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 
@@ -31,9 +24,9 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         pedDao = BaseDatosRepository.getInstance(context).getPedidoDao();
         String accion = intent.getAction();
-        pedido=buscarPedido(intent.getExtras().getInt("idPedido"), accion,intent,context);
+        pedido = buscarPedido(intent.getExtras().getInt("idPedido"), accion, intent, context);
         //  Pedido p = pedidoRepo.buscarPorId(intent.getExtras().getInt("idPedido"));
-      //  prueba(pedido,intent,context);
+        //  notificacionPedido(pedido,intent,context);
 /*        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Intent destino;
         PendingIntent pendingIntent = null;
@@ -102,7 +95,7 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 */
     }
 
-    private void prueba(final Pedido p, final Intent i,final Context c){
+    private void notificacionPedido(final Pedido p, final Intent i, final Context c) {
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -115,8 +108,6 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
                 destino.putExtra("VER_DETALLE", 1);
 //                destino.putExtra("ID_PEDIDO", p.getId());
                 pendingIntent = PendingIntent.getActivity(c, 0, destino, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                Log.d("PEDIDO CENTRAL:",""+p);
 
                 notification = new NotificationCompat.Builder(c, "CANAL01")
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -132,35 +123,34 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(c);
                 notificationManager.notify(1, notification.build());
             }
-            };
-            Thread hiloRest = new Thread(r);
+        };
+        Thread hiloRest = new Thread(r);
         hiloRest.start();
     }
 
-    private Pedido buscarPedido(final Integer idPedMostrar, final String accion, final Intent i,final Context c) {
+    private Pedido buscarPedido(final Integer idPedMostrar, final String accion, final Intent i, final Context c) {
         final Pedido[] ped = new Pedido[1];
         final Pedido[] p = new Pedido[1];
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 p[0] = pedDao.getPedidoId(idPedMostrar);
-                Log.d("PEDIDO BUSCAADOO", "El pedido es: " + p[0]);
                 switch (accion) {
                     case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO":
                         p[0].setEstado(Pedido.Estado.ACEPTADO);
-                        actualizarPedido(p[0],i,c);
+                        actualizarPedido(p[0], i, c);
                         ped[0] = p[0];
                         break;
 
                     case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION":
                         p[0].setEstado(Pedido.Estado.EN_PREPARACION);
-                        actualizarPedido(p[0],i,c);
+                        actualizarPedido(p[0], i, c);
                         ped[0] = p[0];
                         break;
 
                     case "ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_LISTO":
                         p[0].setEstado(Pedido.Estado.LISTO);
-                        actualizarPedido(p[0],i,c);
+                        actualizarPedido(p[0], i, c);
                         ped[0] = p[0];
                         break;
 
@@ -172,13 +162,12 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
         return ped[0];
     }
 
-    private void actualizarPedido(final Pedido ped, final Intent i,final Context c) {
-        Log.d("PEDIDO RECIBIDO", "ES:" + ped);
+    private void actualizarPedido(final Pedido ped, final Intent i, final Context c) {
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 pedDao.update(ped);
-                prueba(ped,i,c);
+                notificacionPedido(ped, i, c);
             }
 
         };

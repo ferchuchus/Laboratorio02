@@ -3,7 +3,6 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,13 +94,13 @@ public class ListarProductoActivity extends AppCompatActivity {
         btnProdAddPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Integer.parseInt(edtProdCantidad.getText().toString())!=0 && productoSelc!=null) {
+                if (Integer.parseInt(edtProdCantidad.getText().toString()) != 0 && productoSelc != null) {
                     Intent intentResultado = new Intent();
                     intentResultado.putExtra("cantidad", Integer.parseInt(edtProdCantidad.getText().toString()));
                     intentResultado.putExtra("idProducto", productoSelc.getId());
                     setResult(RESULT_OK, intentResultado);
                     finish();
-                }else if(Integer.parseInt(edtProdCantidad.getText().toString())==0 )
+                } else if (Integer.parseInt(edtProdCantidad.getText().toString()) == 0)
                     Toast.makeText(ListarProductoActivity.this,
                             "La cantidad debe ser mayor a 0", Toast.LENGTH_LONG).show();
                 else
@@ -130,8 +129,7 @@ public class ListarProductoActivity extends AppCompatActivity {
                         cmbProductoCategoria = (Spinner) findViewById(R.id.cmbProductosCategoria);
                         lstProductos = (ListView) findViewById(R.id.lstProductos);
                         adaptadorSpinner = new ArrayAdapter<Categoria>(ListarProductoActivity.this, android.R.layout.simple_list_item_1, datosCategoria);
-                        Log.d("PERRO QUE TENESS???","Tengo: "+datosCategoria);
-                        if(!datosCategoria.isEmpty()){
+                        if (!datosCategoria.isEmpty()) {
                             categoriaSelc = datosCategoria.get(0);
                             cargarProductosAsociados(categoriaSelc);
                         }

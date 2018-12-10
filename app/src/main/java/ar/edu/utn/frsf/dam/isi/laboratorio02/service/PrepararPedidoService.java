@@ -17,21 +17,21 @@ public class PrepararPedidoService extends IntentService {
     private List<Pedido> listaPedidos;
 
     public PrepararPedidoService() {
-    super("PrepararPedidoService");
+        super("PrepararPedidoService");
     }
 
     @Override
-    protected  void onHandleIntent(Intent intet){
+    protected void onHandleIntent(Intent intet) {
         pedDao = BaseDatosRepository.getInstance(this).getPedidoDao();
-        try{
+        try {
             Thread.currentThread().sleep(20000);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    //    PedidoRepository repositorioPedidos= new PedidoRepository();
-      //  List<Pedido> listaPedidos= repositorioPedidos.getLista();
-        buscarPedidos();
-        for(Pedido p : listaPedidos){
+        //    PedidoRepository repositorioPedidos= new PedidoRepository();
+        //  List<Pedido> listaPedidos= repositorioPedidos.getLista();
+        buscarPedidosyCamiarEstado();
+      /*  for(Pedido p : listaPedidos){
             if(p.getEstado().equals(Pedido.Estado.ACEPTADO)){
                 Intent i= new Intent();
                 i.putExtra("idPedido", p.getId());
@@ -40,14 +40,23 @@ public class PrepararPedidoService extends IntentService {
             }
 
 
-        }
+        }*/
 
     }
-    private void buscarPedidos() {
+
+    private void buscarPedidosyCamiarEstado() {
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 listaPedidos = pedDao.getAll();
+                for (Pedido p : listaPedidos) {
+                    if (p.getEstado().equals(Pedido.Estado.ACEPTADO)) {
+                        Intent i = new Intent();
+                        i.putExtra("idPedido", p.getId());
+                        i.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION");
+                        sendBroadcast(i);
+                    }
+                }
             }
         };
         Thread hiloRest = new Thread(r);

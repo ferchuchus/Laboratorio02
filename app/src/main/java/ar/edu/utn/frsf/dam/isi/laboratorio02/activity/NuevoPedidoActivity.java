@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -197,9 +197,9 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
                 guardarPedido(unPedido);
 
-                cambiarEstadoPedido();
-                Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
-                startActivity(i);
+
+                //  Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
+                // startActivity(i);
             }
 
         });
@@ -262,7 +262,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             public void run() {
                 final Producto item = prodDao.getProductoId(idProd);
                 final DetallePedido detallePedido = new DetallePedido(cant, item);
-                 runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     public void run() {
                         detallePedido.setPedido(unPedido);
                         double precioTotal = unPedido.total();
@@ -277,11 +277,18 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     }
 
     private void buscarPedidoMostrar() {
+        final int[] total = {0};
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 List<Pedido> pedidoList = pedDao.getAll();
                 unPedido = pedDao.getPedidoId(pedidoList.get(pedidoList.size() - 1).getId());
+                List<PedidoConDetalles> listDetalles = pedDao.buscarPorIdconDetalles(unPedido.getId());
+                for (PedidoConDetalles p : listDetalles) {
+                    for (DetallePedido d : p.detalle) {
+                        total[0] += d.getCantidad() * d.getProducto().getPrecio();
+                    }
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -308,7 +315,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                         btnAgregarProducto.setVisibility(View.INVISIBLE);
                         btnHacerPedido.setVisibility(View.INVISIBLE);
                         btnQuitarProducto.setVisibility(View.INVISIBLE);
-                        lblPedido.setText("Total del Pedido: $" + unPedido.total());
+                        lblPedido.setText("Total del Pedido: $" + total[0]);
                     }
                 });
             }
@@ -323,21 +330,16 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             public void run() {
                 pedDao.insert(pedido);
                 List<Pedido> ped = pedDao.getAll();
-                Log.d("unPedido  "," "+pedido);
-                Log.d ("detallePedido"," "+pedido.getDetalle());
-                for(DetallePedido det : pedido.getDetalle()){
-                    Log.d("PedidoBD",""+ped.get(ped.size()-1));
-                    det.setPedido(ped.get(ped.size()-1));
-                    Log.d ("detalless"," "+det);
+                for (DetallePedido det : pedido.getDetalle()) {
+                    det.setPedido(ped.get(ped.size() - 1));
                     detDao.insert(det);
                 }
-                List<PedidoConDetalles> detallePedidosList=pedDao.buscarPorIdconDetalles(ped.get(ped.size()-1).getId());
-                Log.d ("PED_DETALLEPEDIDO"," "+detallePedidosList.get(0).pedido);
-
+                cambiarEstadoPedido();
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(NuevoPedidoActivity.this,
                                 "El pedido fue guardado con exito", Toast.LENGTH_LONG).show();
+
                     }
                 });
             }
@@ -345,6 +347,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         Thread hiloRest = new Thread(r);
         hiloRest.start();
     }
+
 
     private void buscarPedidos() {
         Runnable r = new Runnable() {
@@ -359,6 +362,13 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                         sendBroadcast(intent);
                     }
                 }
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
+                        startActivity(i);
+
+                    }
+                });
             }
         };
         Thread hiloRest = new Thread(r);
