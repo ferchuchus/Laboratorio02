@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -198,8 +198,8 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                 guardarPedido(unPedido);
 
 
-              //  Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
-               // startActivity(i);
+                //  Intent i = new Intent(getApplicationContext(), HistorialPedidoActivity.class);
+                // startActivity(i);
             }
 
         });
@@ -277,11 +277,18 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     }
 
     private void buscarPedidoMostrar() {
+        final int[] total = {0};
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 List<Pedido> pedidoList = pedDao.getAll();
                 unPedido = pedDao.getPedidoId(pedidoList.get(pedidoList.size() - 1).getId());
+                List<PedidoConDetalles> listDetalles = pedDao.buscarPorIdconDetalles(unPedido.getId());
+                for (PedidoConDetalles p : listDetalles) {
+                    for (DetallePedido d : p.detalle) {
+                        total[0] += d.getCantidad() * d.getProducto().getPrecio();
+                    }
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         adaptadorLstProductoItem = new ArrayAdapter<DetallePedido>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_single_choice, unPedido.getDetalle());
@@ -308,7 +315,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                         btnAgregarProducto.setVisibility(View.INVISIBLE);
                         btnHacerPedido.setVisibility(View.INVISIBLE);
                         btnQuitarProducto.setVisibility(View.INVISIBLE);
-                        lblPedido.setText("Total del Pedido: $" + unPedido.total());
+                        lblPedido.setText("Total del Pedido: $" + total[0]);
                     }
                 });
             }
@@ -348,11 +355,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             public void run() {
                 final List<Pedido> lista = pedDao.getAll();
                 Intent intent = new Intent();
-                Log.d("TAMAÑOLISTA", " " + lista.size());
                 for (Pedido p : lista) {
-                    Log.d("PEDIDO", " " + p);
-                    Log.d("PEDIDO  ID", " " + p.getId());
-                    Log.d("ESTADO", " " + p.getEstado());
                     if (p.getEstado().equals(Pedido.Estado.REALIZADO)) {
                         intent.putExtra("idPedido", p.getId());
                         intent.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_ACEPTADO");
