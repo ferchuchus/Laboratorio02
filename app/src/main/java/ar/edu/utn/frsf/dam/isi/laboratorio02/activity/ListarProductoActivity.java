@@ -10,24 +10,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaDao;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
 
-public class ListaProducto extends AppCompatActivity {
+public class ListarProductoActivity extends AppCompatActivity {
     private Bundle datosMain;
     private Integer nuevo_pedido;
     private EditText edtProdCantidad;
     private Button btnProdAddPedido;
-    private ProductoRepository repositorio_prod=new ProductoRepository();
+    private ProductoRepository repositorio_prod = new ProductoRepository();
     private Categoria categoriaSelc;
     //private final List<Categoria> datosCategoria= repositorio_prod.getCategorias();
     private List<Categoria> datosCategoria;
@@ -37,13 +41,22 @@ public class ListaProducto extends AppCompatActivity {
     private ArrayAdapter<Producto> adaptadorLstProductos;
     private List<Producto> datosProductos;
     private Producto productoSelc;
+
+    private CategoriaDao catDao;
+    private ProductoDao prodDao;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_producto);
-        edtProdCantidad=(EditText) findViewById(R.id.edtProdCantidad);
-        btnProdAddPedido= (Button) findViewById(R.id.btnProdAddPedido);
+        edtProdCantidad = (EditText) findViewById(R.id.edtProdCantidad);
+        btnProdAddPedido = (Button) findViewById(R.id.btnProdAddPedido);
+
+        catDao = BaseDatosRepository.getInstance(this).getCategoriaDao();
+        prodDao = BaseDatosRepository.getInstance(this).getProductoDao();
         cargarCombo();
+
         /*cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
         lstProductos= (ListView) findViewById(R.id.lstProductos);
         adaptadorSpinner = new ArrayAdapter<Categoria>(ListaProducto.this,android.R.layout.simple_list_item_1,datosCategoria);
@@ -52,9 +65,9 @@ public class ListaProducto extends AppCompatActivity {
         adaptadorLstProductos= new ArrayAdapter<Producto>(ListaProducto.this,android.R.layout.simple_list_item_single_choice, datosProductos);
         cmbProductoCategoria.setAdapter(adaptadorSpinner);
         lstProductos.setAdapter(adaptadorLstProductos);*/
-        datosMain=this.getIntent().getExtras();
-        nuevo_pedido=datosMain.getInt("NUEVO_PEDIDO");
-        if(nuevo_pedido==0){
+        datosMain = this.getIntent().getExtras();
+        nuevo_pedido = datosMain.getInt("NUEVO_PEDIDO");
+        if (nuevo_pedido == 0) {
             edtProdCantidad.setEnabled(false);
             btnProdAddPedido.setEnabled(false);
         }
@@ -81,43 +94,74 @@ public class ListaProducto extends AppCompatActivity {
         btnProdAddPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentResultado= new Intent();
-                intentResultado.putExtra("cantidad",Integer.parseInt(edtProdCantidad.getText().toString()));
-                intentResultado.putExtra("idProducto", productoSelc.getId());
-                setResult(RESULT_OK,intentResultado);
-                finish();
+                if (Integer.parseInt(edtProdCantidad.getText().toString()) != 0 && productoSelc != null) {
+                    Intent intentResultado = new Intent();
+                    intentResultado.putExtra("cantidad", Integer.parseInt(edtProdCantidad.getText().toString()));
+                    intentResultado.putExtra("idProducto", productoSelc.getId());
+                    setResult(RESULT_OK, intentResultado);
+                    finish();
+                } else if (Integer.parseInt(edtProdCantidad.getText().toString()) == 0)
+                    Toast.makeText(ListarProductoActivity.this,
+                            "La cantidad debe ser mayor a 0", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(ListarProductoActivity.this,
+                            "Primero debe seleccionar un Producto", Toast.LENGTH_LONG).show();
             }
         });
+
+
     }
 
-    private void cargarCombo (){
-        Runnable r= new Runnable() {
+    private void cargarCombo() {
+        Runnable r = new Runnable() {
             @Override
             public void run() {
-                CategoriaRest catRest= new CategoriaRest();
+              /*  CategoriaRest catRest= new CategoriaRest();
                 try {
                     datosCategoria= catRest.listarTodas();}
                 catch (IOException ie){ie.printStackTrace();}
                 catch (JSONException je){je.printStackTrace();}
+               */
+                datosCategoria = catDao.getAll();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cmbProductoCategoria = (Spinner) findViewById(R.id.cmbProductosCategoria);
+                        lstProductos = (ListView) findViewById(R.id.lstProductos);
+                        adaptadorSpinner = new ArrayAdapter<Categoria>(ListarProductoActivity.this, android.R.layout.simple_list_item_1, datosCategoria);
+                        if (!datosCategoria.isEmpty()) {
+                            categoriaSelc = datosCategoria.get(0);
+                            cargarProductosAsociados(categoriaSelc);
+                        }
+                    }
+                });
+
+            }
+        };
+        Thread combo = new Thread(r);
+        combo.start();
+    }
+
+    private void cargarProductosAsociados(final Categoria cateSelc) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                datosProductos = prodDao.getProductosAsociados(cateSelc.getId());
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        cmbProductoCategoria=(Spinner) findViewById(R.id.cmbProductosCategoria);
-                        lstProductos= (ListView) findViewById(R.id.lstProductos);
-                        adaptadorSpinner = new ArrayAdapter<Categoria>(ListaProducto.this,android.R.layout.simple_list_item_1,datosCategoria);
-                        categoriaSelc= datosCategoria.get(0);
-                        datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
-                        adaptadorLstProductos= new ArrayAdapter<Producto>(ListaProducto.this,android.R.layout.simple_list_item_single_choice, datosProductos);
+                        adaptadorLstProductos = new ArrayAdapter<Producto>(ListarProductoActivity.this, android.R.layout.simple_list_item_single_choice, datosProductos);
                         cmbProductoCategoria.setAdapter(adaptadorSpinner);
                         lstProductos.setAdapter(adaptadorLstProductos);
                         cmbProductoCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                                categoriaSelc= (Categoria) adapterView.getItemAtPosition(position);
-                                datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
-                                adaptadorLstProductos.clear();
-                                adaptadorLstProductos.addAll(datosProductos);
+                                categoriaSelc = (Categoria) adapterView.getItemAtPosition(position);
+                                // datosProductos=repositorio_prod.buscarPorCategoria(categoriaSelc);
+                                cargarProductosAsociadosN(categoriaSelc);
+                                //  adaptadorLstProductos.clear();
+                                //  adaptadorLstProductos.addAll(datosProductos);
                             }
 
                             @Override
@@ -128,7 +172,7 @@ public class ListaProducto extends AppCompatActivity {
                         lstProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                                productoSelc= (Producto)adapterView.getItemAtPosition(position);
+                                productoSelc = (Producto) adapterView.getItemAtPosition(position);
                             }
                         });
                     }
@@ -136,9 +180,27 @@ public class ListaProducto extends AppCompatActivity {
 
             }
         };
-        Thread combo= new Thread(r);
+        Thread combo = new Thread(r);
         combo.start();
     }
 
+    private void cargarProductosAsociadosN(final Categoria cateSelc) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                datosProductos = prodDao.getProductosAsociados(cateSelc.getId());
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adaptadorLstProductos.clear();
+                        adaptadorLstProductos.addAll(datosProductos);
+                    }
+                });
+
+            }
+        };
+        Thread combo = new Thread(r);
+        combo.start();
+    }
 }

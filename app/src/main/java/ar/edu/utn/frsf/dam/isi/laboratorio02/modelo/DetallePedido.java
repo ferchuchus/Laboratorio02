@@ -1,15 +1,25 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.modelo;
 
-public class PedidoDetalle {
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
-    private static int ID_DETALLE =1;
+@Entity
+public class DetallePedido {
+
+    private static int ID_DETALLE = 1;
+    @PrimaryKey(autoGenerate = true)
     private Integer id;
+    @ColumnInfo(name = "Cantidad")
     private Integer cantidad;
+    @Embedded(prefix = "prod_")
     private Producto producto;
+    @Embedded(prefix = "ped_")
     private Pedido pedido;
 
-    public PedidoDetalle(Integer cantidad, Producto producto) {
-        id=ID_DETALLE++;
+    public DetallePedido(Integer cantidad, Producto producto) {
+      //  id = ID_DETALLE++;
         this.cantidad = cantidad;
         this.producto = producto;
     }
@@ -49,6 +59,6 @@ public class PedidoDetalle {
 
     @Override
     public String toString() {
-        return producto.getNombre() + "( $"+producto.getPrecio()+")"+ cantidad;
+        return producto.getNombre() + "( $" + producto.getPrecio() + ")" + cantidad;
     }
 }

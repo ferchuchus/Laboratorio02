@@ -3,38 +3,45 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.activity.NuevoPedidoActivity;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.holder.PedidoHolder;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.DetallePedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoConDetalles;
+
 import static ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.Estado.*;
 
 public class PedidoAdapter extends ArrayAdapter<Pedido> {
     private Context ctx;
     private List<Pedido> datos;
-    private int cantidad = 0;
 
-    public PedidoAdapter(Context act, List<Pedido> objetos) {
-        super(act, R.layout.activity_historial_pedido, objetos);
-        this.ctx = act;
+    private PedidoDao pedDao;
+
+
+    public PedidoAdapter(Context context, List<Pedido> objetos) {
+        super(context, R.layout.activity_historial_pedido, objetos);
+        this.ctx = context;
         this.datos = objetos;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        pedDao = BaseDatosRepository.getInstance(this.getContext()).getPedidoDao();
         LayoutInflater inflater = LayoutInflater.from(this.getContext());
         View fila = convertView;
         if (fila == null) {
@@ -61,12 +68,14 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         holder.tvHoraEntrega.setText("Fecha: " + sdf.format(pedido.getFecha()));
         colorEstado(pedido, holder);
         deshabilitaBoton(pedido, holder, datos);
-        for (PedidoDetalle p : pedido.getDetalle()) {
+        buscarDetallePedido(pedido, holder, position);
+
+        /*Log.d("PRIMER PEDIDO: ","DETALLE: "+datos.get(0).getDetalle() + " TOTAL: "+datos.get(0).total() + "PEDID: "+datos.get(0));
+        for (DetallePedido p : pedido.getDetalle()) {
             cantidad += p.getCantidad();
         }
         holder.tvCantidadItems.setText("Items: " + cantidad);
         holder.tvPrecio.setText("A Pagar: " + pedido.total());
-
         holder.btnCancelar.setTag(position);
         holder.btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,13 +93,61 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             public void onClick(View v) {
                 int indice= (int) v.getTag();
                 Pedido pedidoSel=datos.get(indice);
-                Intent i= new Intent(getContext(), NuevoPedido.class);
+                Intent i= new Intent(getContext(), NuevoPedidoActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.putExtra("VER_DETALLE", 1);
                 i.putExtra("ID_PEDIDO", pedidoSel.getId());
                 ctx.startActivity(i);
             }
-        });
+        });*/
         return fila;
+    }
+
+    private void buscarDetallePedido(final Pedido pedido, final PedidoHolder holder, final int position) {
+        final Integer[] cantidad = {0};
+        final int[] total = {0};
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                List<PedidoConDetalles> listDetalles = pedDao.buscarPorIdconDetalles(pedido.getId());
+                for (PedidoConDetalles p : listDetalles) {
+                    for (DetallePedido d : p.detalle) {
+                        cantidad[0] += d.getCantidad();
+                        total[0] += d.getCantidad() * d.getProducto().getPrecio();
+                    }
+                }
+                holder.tvCantidadItems.setText("Items: " + cantidad[0]);
+                holder.tvPrecio.setText("A Pagar: " + total[0]);
+                holder.btnCancelar.setTag(position);
+                holder.btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int indice = (int) v.getTag();
+                        Pedido pedidoSel = datos.get(indice);
+                        pedidoSel.setEstado(CANCELADO);
+                        PedidoAdapter.this.notifyDataSetChanged();
+                    }
+                });
+
+                holder.btnVerDetalle.setTag(position);
+                holder.btnVerDetalle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int indice = (int) v.getTag();
+                        Pedido pedidoSel = datos.get(indice);
+                        Intent i = new Intent(getContext(), NuevoPedidoActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("VER_DETALLE", 1);
+                        i.putExtra("ID_PEDIDO", pedidoSel.getId());
+                        ctx.startActivity(i);
+                    }
+                });
+
+            }
+        };
+
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
     }
 
     private void colorEstado(Pedido pedido, PedidoHolder holder) {

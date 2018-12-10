@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.ListaProducto">
+    tools:context=".activity.ListarProductoActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:text="0" />
+        android:text="" />
 
     <Button
         android:id="@+id/btnProdAddPedido"

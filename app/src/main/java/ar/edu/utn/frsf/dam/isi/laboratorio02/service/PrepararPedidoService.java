@@ -7,24 +7,31 @@ import android.os.IBinder;
 
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 public class PrepararPedidoService extends IntentService {
+    private PedidoDao pedDao;
+    private List<Pedido> listaPedidos;
+
     public PrepararPedidoService() {
-    super("PrepararPedidoService");
+        super("PrepararPedidoService");
     }
 
     @Override
-    protected  void onHandleIntent(Intent intet){
-        try{
+    protected void onHandleIntent(Intent intet) {
+        pedDao = BaseDatosRepository.getInstance(this).getPedidoDao();
+        try {
             Thread.currentThread().sleep(20000);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        PedidoRepository repositorioPedidos= new PedidoRepository();
-        List<Pedido> listaPedidos= repositorioPedidos.getLista();
-        for(Pedido p : listaPedidos){
+        //    PedidoRepository repositorioPedidos= new PedidoRepository();
+        //  List<Pedido> listaPedidos= repositorioPedidos.getLista();
+        buscarPedidosyCamiarEstado();
+      /*  for(Pedido p : listaPedidos){
             if(p.getEstado().equals(Pedido.Estado.ACEPTADO)){
                 Intent i= new Intent();
                 i.putExtra("idPedido", p.getId());
@@ -33,7 +40,26 @@ public class PrepararPedidoService extends IntentService {
             }
 
 
-        }
+        }*/
 
+    }
+
+    private void buscarPedidosyCamiarEstado() {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                listaPedidos = pedDao.getAll();
+                for (Pedido p : listaPedidos) {
+                    if (p.getEstado().equals(Pedido.Estado.ACEPTADO)) {
+                        Intent i = new Intent();
+                        i.putExtra("idPedido", p.getId());
+                        i.setAction("ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido.ESTADO_EN_PREPARACION");
+                        sendBroadcast(i);
+                    }
+                }
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
     }
 }

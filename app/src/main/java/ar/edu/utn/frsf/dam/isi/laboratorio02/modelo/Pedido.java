@@ -1,19 +1,36 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.modelo;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.EstadoConverter;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.FechaConverter;
+
+@Entity
 public class Pedido {
 
-    public enum Estado { REALIZADO, ACEPTADO, RECHAZADO,EN_PREPARACION,LISTO,ENTREGADO,CANCELADO}
+    public enum Estado {REALIZADO, ACEPTADO, RECHAZADO, EN_PREPARACION, LISTO, ENTREGADO, CANCELADO}
 
+    @PrimaryKey(autoGenerate = true)
     private Integer id;
+    @TypeConverters(FechaConverter.class)
     private Date fecha;
-    private List<PedidoDetalle> detalle;
+    @Ignore
+    private List<DetallePedido> detalle;
+    @TypeConverters(EstadoConverter.class)
     private Estado estado;
+    @ColumnInfo(name = "Direccion_Envio")
     private String direccionEnvio;
+    @ColumnInfo(name = "Mail_Contacto")
     private String mailContacto;
+    @ColumnInfo(name = "Retira")
     private Boolean retirar;
 
     public String getDireccionEnvio() {
@@ -41,10 +58,10 @@ public class Pedido {
     }
 
     public Pedido() {
-        this.detalle =new ArrayList<>();
+        this.detalle = new ArrayList<>();
     }
 
-    public Pedido(Date fecha, List<PedidoDetalle> detalle, Estado estado, String direccionEnvio, String mailContacto, Boolean retirar) {
+    public Pedido(Date fecha, List<DetallePedido> detalle, Estado estado, String direccionEnvio, String mailContacto, Boolean retirar) {
         this();
         this.fecha = fecha;
         this.detalle = detalle;
@@ -76,11 +93,11 @@ public class Pedido {
         this.fecha = fecha;
     }
 
-    public List<PedidoDetalle> getDetalle() {
+    public List<DetallePedido> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<PedidoDetalle> detalle) {
+    public void setDetalle(List<DetallePedido> detalle) {
         this.detalle = detalle;
     }
 
@@ -92,13 +109,13 @@ public class Pedido {
         this.estado = estado;
     }
 
-    public void agregarDetalle(PedidoDetalle det){
-        if(this.detalle == null) this.detalle = new ArrayList<>();
+    public void agregarDetalle(DetallePedido det) {
+        if (this.detalle == null) this.detalle = new ArrayList<>();
         this.detalle.add(det);
     }
 
-    public void quitarDetalle(PedidoDetalle det){
-        if(this.detalle != null) this.detalle.remove(det);
+    public void quitarDetalle(DetallePedido det) {
+        if (this.detalle != null) this.detalle.remove(det);
     }
 
     @Override
@@ -113,10 +130,10 @@ public class Pedido {
                 '}';
     }
 
-    public Double total(){
+    public Double total() {
         Double total = 0.0;
-        for(PedidoDetalle det: detalle){
-            total+=det.getProducto().getPrecio()*det.getCantidad();
+        for (DetallePedido det : detalle) {
+            total += det.getProducto().getPrecio() * det.getCantidad();
         }
         return total;
     }

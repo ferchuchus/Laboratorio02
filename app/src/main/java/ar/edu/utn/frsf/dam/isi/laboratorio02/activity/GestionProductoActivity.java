@@ -3,25 +3,21 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.R;
-import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.CategoriaRest;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.BaseDatosRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaDao;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoDao;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.rest.RestClient;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRetrofit;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
@@ -43,8 +39,10 @@ public class GestionProductoActivity extends AppCompatActivity {
     private Button btnBorrar;
     private Boolean flagActualizacion;
     private ArrayAdapter<Categoria> comboAdapter;
-    private List<Categoria>datosCategoria;
+    private List<Categoria> datosCategoria;
     private Producto p = new Producto();
+    private ProductoDao prodDao;
+    private CategoriaDao catDao;
 
     //json-server --host 192.168.1.7 -p 5000 Documents/resto-db.json  ---> Tener el celu y la compu en la misma RED
     //http://192.168.1.7:5000/
@@ -66,6 +64,9 @@ public class GestionProductoActivity extends AppCompatActivity {
         btnBuscar = (Button) findViewById(R.id.btnAbmProductoBuscar);
         btnBorrar = (Button) findViewById(R.id.btnAbmProductoBorrar);
 
+        catDao = BaseDatosRepository.getInstance(this).getCategoriaDao();
+        prodDao = BaseDatosRepository.getInstance(this).getProductoDao();
+
         opcionNuevoBusqueda.setChecked(false);
         btnBuscar.setEnabled(false);
         btnBorrar.setEnabled(false);
@@ -79,18 +80,16 @@ public class GestionProductoActivity extends AppCompatActivity {
                 btnBuscar.setEnabled(isChecked);
                 btnBorrar.setEnabled(isChecked);
                 idProductoBuscar.setEnabled(isChecked);
-                nombreProducto.setText("");
-                descProducto.setText("");
-                precioProducto.setText("");
-                idProductoBuscar.setText("");
+                blanquear(0);
                 comboCategorias.setSelection(0);
             }
         });
 
+
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                p.setId(Integer.valueOf(idProductoBuscar.getText().toString()));
+               /* p.setId(Integer.valueOf(idProductoBuscar.getText().toString()));
                 ProductoRetrofit clienteRest = RestClient.getInstance().getRetrofit().create(ProductoRetrofit.class);
                 Call<Producto> altaCall = clienteRest.buscarProductoPorId(p.getId());
                 altaCall.enqueue(new Callback<Producto>() {
@@ -102,8 +101,7 @@ public class GestionProductoActivity extends AppCompatActivity {
                                 nombreProducto.setText(p.getNombre());
                                 descProducto.setText(p.getDescripcion());
                                 precioProducto.setText(p.getPrecio().toString());
-                                Log.d("DECIME QUE TIENEEE","DECIME QUE TIENEEE:" + p.getNombre() +p.getDescripcion()+p.getPrecio()+p.getId()+p.getCategoria().getId());
-                                comboCategorias.setSelection(p.getCategoria().getId()-1);
+                               comboCategorias.setSelection(p.getCategoria().getId()-1);
                                 break;
                             default:
                                 Toast.makeText(GestionProductoActivity.this, "El Producto " + p.getId() + " no se encuentra!",
@@ -115,14 +113,20 @@ public class GestionProductoActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Producto> call, Throwable t) {
                     }
-                });
+                });*/
+                p.setId(Integer.valueOf(idProductoBuscar.getText().toString()));
+                if (p.getId() > 0)
+                    buscarProductoID(p);
+                else
+                    Toast.makeText(GestionProductoActivity.this, "El ID debe ser mayor que 0",
+                            Toast.LENGTH_LONG).show();
             }
         });
 
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                p.setNombre(nombreProducto.getText().toString());
+              /*  p.setNombre(nombreProducto.getText().toString());
                 p.setDescripcion(descProducto.getText().toString());
                 p.setPrecio(Double.valueOf( precioProducto.getText().toString()));
                 p.setCategoria((Categoria) comboCategorias.getSelectedItem());
@@ -180,13 +184,32 @@ public class GestionProductoActivity extends AppCompatActivity {
                     }
                 } else
                     Toast.makeText(GestionProductoActivity.this, "Faltan rellenar campos!", Toast.LENGTH_LONG).show();
+           */
+                if (!flagActualizacion) { //opcionNuevoBusqueda.isChecked())
+                    p.setNombre(nombreProducto.getText().toString());
+                    p.setDescripcion(descProducto.getText().toString());
+                    p.setPrecio(Double.valueOf(precioProducto.getText().toString()));
+                    p.setCategoria((Categoria) comboCategorias.getSelectedItem());
+                    guardarProducto(p);
+                    blanquear(1);
+                } else if (!idProductoBuscar.getText().toString().isEmpty()) {
+                    p.setNombre(nombreProducto.getText().toString());
+                    p.setDescripcion(descProducto.getText().toString());
+                    p.setPrecio(Double.valueOf(precioProducto.getText().toString()));
+                    p.setCategoria((Categoria) comboCategorias.getSelectedItem());
+                    actualizarProducto(p);
+                }else {
+                    Toast.makeText(GestionProductoActivity.this, "Falta/n rellenar algun/os campo/s",
+                            Toast.LENGTH_LONG).show();
+                }
             }
+
         });
 
         btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductoRetrofit clienteRest = RestClient.getInstance().getRetrofit().create(ProductoRetrofit.class);
+               /* ProductoRetrofit clienteRest = RestClient.getInstance().getRetrofit().create(ProductoRetrofit.class);
                 Call<Producto> altaCall = clienteRest.borrar(p.getId());
                 altaCall.enqueue(new Callback<Producto>() {
                     @Override
@@ -211,7 +234,9 @@ public class GestionProductoActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Producto> call, Throwable t) {
                     }
-                });
+                });*/
+                borrarProducto(p);
+                blanquear(2);
             }
         });
 
@@ -224,18 +249,12 @@ public class GestionProductoActivity extends AppCompatActivity {
         });
     }
 
-    private boolean camposLlenos(Producto p) {
-        if (p.getNombre() != null && p.getCategoria() != null && p.getDescripcion() != null && p.getPrecio() != null)
-            return true;
-        return false;
-    }
-
     private void cargarCombo() {
 
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                CategoriaRest catRest = new CategoriaRest();
+           /*     CategoriaRest catRest = new CategoriaRest();
                 try {
                     datosCategoria = catRest.listarTodas();
                 } catch (IOException ie) {
@@ -243,11 +262,12 @@ public class GestionProductoActivity extends AppCompatActivity {
                 } catch (JSONException je) {
                     je.printStackTrace();
                 }
-
+*/
+                final List<Categoria> datosCategoria = catDao.getAll();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        comboAdapter= new ArrayAdapter<Categoria>(GestionProductoActivity.this, android.R.layout.simple_list_item_1, datosCategoria);
+                        comboAdapter = new ArrayAdapter<Categoria>(GestionProductoActivity.this, android.R.layout.simple_list_item_1, datosCategoria);
                         comboCategorias.setAdapter(comboAdapter);
 
                     }
@@ -257,5 +277,128 @@ public class GestionProductoActivity extends AppCompatActivity {
         };
         Thread combo = new Thread(r);
         combo.start();
+    }
+
+
+    private boolean camposLlenos(Producto p) {
+        if (p.getNombre() != null && p.getCategoria() != null && p.getDescripcion() != null && p.getPrecio() != null)
+            return true;
+        return false;
+    }
+
+    private boolean camposLlenos() {
+        if (!nombreProducto.getText().toString().isEmpty() && !descProducto.getText().toString().isEmpty() && !precioProducto.getText().toString().isEmpty())
+            return true;
+        return false;
+    }
+
+    private void blanquear(Integer i) {
+        switch (i) {
+            case 0:
+                nombreProducto.setText("");
+                descProducto.setText("");
+                precioProducto.setText("");
+                idProductoBuscar.setText("");
+                break;
+            case 1:
+                nombreProducto.setText("");
+                descProducto.setText("");
+                precioProducto.setText("");
+                idProductoBuscar.setText("");
+                comboCategorias.setSelection(0);
+                btnBorrar.setEnabled(false);
+                break;
+            case 2:
+                nombreProducto.setText("");
+                descProducto.setText("");
+                precioProducto.setText("");
+                idProductoBuscar.setText("");
+                comboCategorias.setSelection(0);
+                btnBorrar.setEnabled(false);
+                btnGuardar.setEnabled(false);
+                break;
+        }
+    }
+
+    private void guardarProducto(final Producto producto) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                prodDao.insert(producto);
+                final List<Producto> productos = prodDao.getAll();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(GestionProductoActivity.this,
+                                "El Producto " + productos.get(productos.size() - 1).getNombre() + " fue guardado con éxito", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
+    }
+
+    private void actualizarProducto(final Producto producto) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                prodDao.update(producto);
+                final Producto productoID = prodDao.getProductoId(producto.getId());
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(GestionProductoActivity.this,
+                                "El Producto " + productoID.getNombre() + " fue actualizado con éxito.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
+    }
+
+    private void borrarProducto(final Producto producto) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                final Producto p = prodDao.getProductoId(producto.getId());
+                prodDao.delete(p);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(GestionProductoActivity.this,
+                                "El Producto " + p.getNombre() + " fue borrado con éxito. ", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
+    }
+
+    private void buscarProductoID(final Producto producto) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                final Producto prodID = prodDao.getProductoId(producto.getId());
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        if (prodID != null)
+                            cargarCampos(prodID);
+                        else
+                            Toast.makeText(GestionProductoActivity.this, "No existe un producto con el ID: " + producto.getId(),
+                                    Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+        Thread hiloRest = new Thread(r);
+        hiloRest.start();
+    }
+
+    private void cargarCampos(Producto producto) {
+        nombreProducto.setText(producto.getNombre());
+        descProducto.setText(producto.getDescripcion());
+        precioProducto.setText(producto.getPrecio().toString());
+        comboCategorias.setSelection(producto.getCategoria().getId() - 1);
+
     }
 }
